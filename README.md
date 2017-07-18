@@ -12,7 +12,7 @@ The repository contains samples published on [Media Foundation Team Blog](https:
 
 ## MFMediaPropDump
 
-[This](https://blogs.msdn.microsoft.com/mf/2010/01/11/mfmediapropdump/ is a command line tool showcasing the Windows 7 Media Foundation APIs to read media source attributes and metadata. It also shows how to leverage the Windows Media Format SDK to read DRM properties. The source code can be useful for learning about Media Foundation. The built executable can be useful for dumping media file properties for debugging, or simply to get information about a media file, such as the frame size, frame rate, bit rate, or sample rate.
+[This](https://blogs.msdn.microsoft.com/mf/2010/01/11/mfmediapropdump/) is a command line tool showcasing the Windows 7 Media Foundation APIs to read media source attributes and metadata. It also shows how to leverage the Windows Media Format SDK to read DRM properties. The source code can be useful for learning about Media Foundation. The built executable can be useful for dumping media file properties for debugging, or simply to get information about a media file, such as the frame size, frame rate, bit rate, or sample rate.
 
 This sample can display properties for any media file format that is supported by Media Foundation.
 
