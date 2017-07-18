@@ -21,4 +21,4 @@ Media Foundation does not currently have support for reading DRM properties, so 
 ### Acknowledgements
 
 1. [Media Foundation Team Blog](https://blogs.msdn.microsoft.com/mf)
-2. mofo77's [`MFNode`](https://sourceforge.net/projects/mfnode/) at SourceForge
+2. Username mofo77's [MFNode](https://sourceforge.net/projects/mfnode/) project at SourceForge
