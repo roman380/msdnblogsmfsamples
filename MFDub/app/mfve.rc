@@ -1,0 +1,188 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Neutral resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
+#ifdef _WIN32
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDC_MFVE                 ICON                    "mfve.ico"
+IDI_SMALL                ICON                    "small.ico"
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDC_MFVE ACCELERATORS 
+BEGIN
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 22, 17, 230, 44
+STYLE DS_SETFONT | DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "System", 0, 0, 0x0
+BEGIN
+    ICON            IDC_MFVE,IDC_MYICON,14,9,20,20
+    LTEXT           "MF video Editor",IDC_STATIC,49,10,119,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2005 Microsoft Corporation",IDC_STATIC,47,20,136,8
+    DEFPUSHBUTTON   "OK",IDOK,195,6,30,11,WS_GROUP
+END
+
+IDD_ADDTRANSFORM DIALOGEX 0, 0, 250, 225
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Add Transform"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,53,204,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,105,204,50,14
+    LISTBOX        IDC_TRANSFORMLIST,1,4,133,197, WS_VSCROLL | WS_TABSTOP
+    LTEXT          "Description",IDC_TRANSFORMDESC,137,4,110,197
+END
+
+IDD_ENCODEOPTIONS DIALOGEX 0, 0, 118, 95
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Encode Options"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,7,74,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,61,74,50,14
+    CONTROL         "CBR",IDC_CBR,"Button",BS_AUTORADIOBUTTON | WS_GROUP,7,7,35,10
+    CONTROL         "VBR",IDC_VBR,"Button",BS_AUTORADIOBUTTON | WS_DISABLED,55,7,29,10
+    LTEXT           "Bitrate:",IDC_BOXLABEL,7,24,45,10
+    EDITTEXT        IDC_VALUE,46,21,49,12,ES_AUTOHSCROLL
+    CONTROL         "Change frame rate",IDC_CHANGEFRAMERATE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,40,75,8
+    LTEXT           "Frame Rate:",IDC_STATIC,7,54,42,8
+    EDITTEXT        IDC_FRAMERATE,52,50,43,12,ES_AUTOHSCROLL | ES_READONLY
+END
+
+IDD_METADATA DIALOGEX 0, 0, 241, 203
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,184,182,50,14
+    LTEXT           "File:",IDC_STATIC,7,8,17,8
+    EDITTEXT        IDC_FILENAME,50,4,184,12,ES_AUTOHSCROLL | ES_READONLY
+    GROUPBOX        "Video",IDC_STATIC,7,54,232,73
+    LTEXT           "Size:",IDC_STATIC,7,20,18,8
+    EDITTEXT        IDC_FILESIZE,50,16,55,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Frame Size:",IDC_STATIC,10,87,40,8
+    EDITTEXT        IDC_FRAMESIZE,59,83,60,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "FPS:",IDC_STATIC,10,99,40,8
+    EDITTEXT        IDC_FPS,59,95,60,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Pixel Aspect Ratio:",IDC_STATIC,124,64,61,8
+    EDITTEXT        IDC_PAR,190,60,44,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Avg Bitrate:",IDC_STATIC,10,75,39,8
+    EDITTEXT        IDC_AVGBITRATE,59,72,60,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Subtype:",IDC_STATIC,10,64,40,8
+    EDITTEXT        IDC_SUBTYPE,59,60,60,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Frame Count:",IDC_STATIC,124,75,58,8
+    EDITTEXT        IDC_FRAMECOUNT,190,72,44,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "# Keyframes:",IDC_STATIC,124,87,59,8
+    EDITTEXT        IDC_KEYFRAMECOUNT,190,83,44,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Interlace Mode:",IDC_STATIC,10,114,52,9
+    EDITTEXT        IDC_INTERLACEMODE,66,110,168,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Duration:",IDC_STATIC,7,31,30,8
+    EDITTEXT        IDC_DURATION,50,27,55,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Mime Type:",IDC_STATIC,7,43,38,8
+    EDITTEXT        IDC_MIMETYPE,50,39,55,12,ES_AUTOHSCROLL | ES_READONLY
+    GROUPBOX        "Audio",IDC_STATIC,7,133,232,48
+    LTEXT           "Subtype:",IDC_STATIC,10,141,40,8
+    EDITTEXT        IDC_SUBTYPEAUDIO,59,138,60,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Avg Bytes/Sec:",IDC_STATIC,124,141,55,8
+    LTEXT           "# Channels:",IDC_STATIC,10,153,43,8
+    EDITTEXT        IDC_NUMCHANNELS,59,149,60,12,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_AVGBYTESSEC,190,138,44,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Block Alignment:",IDC_STATIC,124,153,55,8
+    EDITTEXT        IDC_BLOCKALIGN,190,149,44,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Bits/Sample:",IDC_STATIC,10,163,40,8
+    EDITTEXT        IDC_BITSPERSAMPLE,59,160,60,12,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_SAMPLESPERSEC,190,160,44,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Samples/Sec:",IDC_STATIC,124,163,48,8
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_MAINTOOL             BITMAP        "maintool.bmp"
+IDB_TRANSPORTTOOL        BITMAP        "transporttool.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_APP_TITLE           "MFVE"
+    IDC_MFVE                "MFVE"
+    IDS_OPEN                "Open\0Save\0\0" 
+    IDS_ERROR_INITIALIZING  "Error initializing application"
+    IDS_ERROR_SEEKING       "Error while seeking."
+    IDS_ERROR_GENERIC       "Error"
+    IDS_ERROR_WINDOW_CREATION "Main window creation failed!"
+    IDS_ERROR_LOAD_SOURCE   "Could not load media source"
+    IDS_ERROR_WRITE_OUTPUT  "Could not encode to output file"
+    IDS_ERROR_ADD_TRANSFORM  "Could not add new transform"
+    IDS_ERROR_ADD_TRANSFORM_MAX "Could not add new transform.  The transform list is already full."
+    IDS_ERROR_PLAYBACK      "Error playing back output"
+    IDS_ERROR_PLAYBACK_PREVIEW "Error playing back preview"
+    IDS_VIDEO_TRANSFORMS    "Video Transforms"
+    IDS_AUDIO_TRANSFORMS    "Audio Transforms"
+    IDS_FILTER_MEDIA_FILES  "Media Files\0*.*##"
+    IDS_SELECT_SOURCE       "Select Media Source"
+    IDS_SELECT_SINK         "Write media file"
+    IDS_REASON              "%s Reason: %x"
+    IDS_FRAME_INFO_KEY      "Frame %d @ %2.2d:%2.2d:%2.2d.%3.3d [Key]"
+    IDS_FRAME_INFO          "Frame %d @ %2.2d:%2.2d:%2.2d.%3.3d"
+    IDS_PLAYBACK_INFO       "Playback: %2.2d:%2.2d:%2.2d.%3.3d/%2.2d:%2.2d:%2.2d.%3.3d"
+    IDS_ENCODING_INFO       "Encoding %d%% complete"
+END
+
+#endif    // Neutral resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+

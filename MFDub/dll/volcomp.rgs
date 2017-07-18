@@ -1,0 +1,25 @@
+HKCR
+{
+	mfve.MfvVolumeCompression.1 = s 'MFVE Volume Compression MFT'
+	{
+		CLSID = s '{1474a093-8d56-4e3e-a67a-dc43b0db808a}'
+	}
+	mfve.MfveNoiseRemoval = s 'MFVE Volume Compression MFT'
+	{
+		CLSID = s '{1474a093-8d56-4e3e-a67a-dc43b0db808a}'
+		CurVer = s 'mfveutil.VolumeCompression.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {1474a093-8d56-4e3e-a67a-dc43b0db808a} = s 'MFVE VolumeCompression MFT'
+		{
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Both'
+			}
+			val AppID = s '%APPID%'
+			'TypeLib' = s '{8C4AA2DD-9633-4d44-BFF4-7A2CCD464269}'
+			'Version' = s '1.0'
+		}
+	}
+}

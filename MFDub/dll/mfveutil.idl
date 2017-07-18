@@ -1,0 +1,59 @@
+//*@@@+++@@@@******************************************************************
+//
+// Microsoft Windows Media Foundation
+// Copyright (C) Microsoft Corporation. All rights reserved.
+//
+//*@@@---@@@@******************************************************************
+//
+import "unknwn.idl";
+import "objidl.idl";
+import "mfidl.idl";
+import "mftransform.idl";
+
+typedef enum MFVE_PARAM_TYPE
+{
+    MFVE_PARAM_DOUBLE,
+    MFVE_PARAM_UINT32,
+    MFVE_PARAM_UINT64,
+    MFVE_PARAM_IMAGE_RECT,
+    MFVE_PARAM_STRING,
+    MFVE_PARAM_ARRAY_DOUBLE,
+    MFVE_PARAM_ARRAY_UINT32,
+    MFVE_PARAM_ARRAY_UINT64,
+    MFVE_PARAM_ARRAY_STRING
+} MFVE_PARAM_TYPE;
+
+[
+    object,
+    uuid(3A2B9766-2835-4520-AA66-39F077C22173),
+]
+/// <summary>
+///     Interface for configuring a transform
+/// </summary>
+interface IMFTConfiguration : IUnknown
+{
+    HRESULT GetFriendlyName([out] LPWSTR* pszFriendlyName);
+    HRESULT QueryRequiresConfiguration([out] BOOL* pfRequiresConfiguration);
+    HRESULT Configure([in] LONG_PTR hWndParent, [in] IMFSample* pExampleSample, [in] IMFMediaType* pSampleMediaType);
+    HRESULT CloneMFT([out] IMFTConfiguration** ppClonedTransform);
+    HRESULT GetParamCount([out] DWORD* pcParams);
+    HRESULT GetParam([in] DWORD dwIndex, [out] LPWSTR* pszName, [out] MFVE_PARAM_TYPE* pParamType, [out] GUID* pgidKey);
+    HRESULT GetParamConstraint([in] DWORD dwIndex, [out] PROPVARIANT* pvarMin, [out] PROPVARIANT* pvarMax, [out] PROPVARIANT* pvarStep);
+    HRESULT GetParamValues([in] DWORD dwIndex, [out] DWORD* pcValues, [out] PROPVARIANT** ppvarValues);
+    HRESULT UpdateConfiguration();
+}
+
+[ 
+    uuid(8C4AA2DD-9633-4d44-BFF4-7A2CCD464269),
+    helpstring("MFVE Type Library"),
+    helpstringdll("MFVEUTIL"),
+    version(1.0)
+] 
+library MFVEUTIL {
+  [ uuid(F8A7E6A5-1E0B-4ec8-ADB6-23A44D65707D), helpstring("MFVE Edge Finder MFT") ] coclass CEdgeFinderMFT { [default] interface IMFTransform; }
+  [ uuid(4EF1157C-791E-4838-840A-C892110D756C), helpstring("MFVE Histogram Equalization MFT") ] coclass CHistogramEqualizationMFT { [default] interface IMFTransform; }
+  [ uuid(B1CFA1FE-9A17-4a47-94E9-FF8207321116), helpstring("MFVE Noise Removal MFT") ] coclass CNoiseRemovalMFT { [default] interface IMFTransform; }
+  [ uuid(55CD9E29-45E9-4bf3-8503-50E3C8AC4B5B), helpstring("MFVE Unsharp Mask MFT") ] coclass CUnsharpMaskMFT { [default] interface IMFTransform; }
+  [ uuid(70B44AAE-A6BE-4cd3-A4B4-A7567220B061), helpstring("MFVE Resize & Crop MFT") ] coclass CResizeCropMFT { [default] interface IMFTransform; }
+  [ uuid(1474A093-8d56-4E3E-A67A-DC43B0DB808A), helpstring("MFVE Volume Compression MFT") ] coclass CVolumeCompressionMFT { [default] interface IMFTransform; }
+}

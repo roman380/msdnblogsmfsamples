@@ -1,0 +1,1797 @@
+// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+// PARTICULAR PURPOSE.
+//
+// Copyright (c) Microsoft Corporation. All rights reserved
+
+#include "stdafx.h"
+#include "common.h"
+#include "helper.h"
+
+static struct tag_KnownGUID
+{
+    GUID guid;
+    LPCWSTR lpstrName;
+} g_KnownGUIDs[] = 
+{
+// From mfapi.h
+    {MFVideoFormat_Base, L"MFVideoFormat_Base"}, 
+    {MFVideoFormat_RGB32, L"MFVideoFormat_RGB32"}, 
+    {MFVideoFormat_ARGB32, L"MFVideoFormat_ARGB32"}, 
+    {MFVideoFormat_RGB24, L"MFVideoFormat_RGB24"}, 
+    {MFVideoFormat_RGB555, L"MFVideoFormat_RGB555"}, 
+    {MFVideoFormat_RGB565, L"MFVideoFormat_RGB565"}, 
+    {MFVideoFormat_AI44, L"MFVideoFormat_AI44"}, 
+    {MFVideoFormat_AYUV, L"MFVideoFormat_AYUV"}, 
+    {MFVideoFormat_YUY2, L"MFVideoFormat_YUY2"}, 
+    {MFVideoFormat_YVYU, L"MFVideoFormat_YVYU"}, 
+    {MFVideoFormat_NV11, L"MFVideoFormat_NV11"}, 
+    {MFVideoFormat_NV12, L"MFVideoFormat_NV12"}, 
+    {MFVideoFormat_YV12, L"MFVideoFormat_YV12"}, 
+    {MFVideoFormat_I420, L"MFVideoFormat_I420"}, 
+    {MFVideoFormat_IYUV, L"MFVideoFormat_IYUV"}, 
+    {MFVideoFormat_Y210, L"MFVideoFormat_Y210"}, 
+    {MFVideoFormat_Y216, L"MFVideoFormat_Y216"}, 
+    {MFVideoFormat_Y410, L"MFVideoFormat_Y410"}, 
+    {MFVideoFormat_Y416, L"MFVideoFormat_Y416"}, 
+    {MFVideoFormat_Y41P, L"MFVideoFormat_Y41P"}, 
+    {MFVideoFormat_Y41T, L"MFVideoFormat_Y41T"}, 
+    {MFVideoFormat_Y42T, L"MFVideoFormat_Y42T"}, 
+    {MFVideoFormat_P210, L"MFVideoFormat_P210"}, 
+    {MFVideoFormat_P216, L"MFVideoFormat_P216"}, 
+    {MFVideoFormat_P010, L"MFVideoFormat_P010"}, 
+    {MFVideoFormat_P016, L"MFVideoFormat_P016"}, 
+    {MFVideoFormat_v210, L"MFVideoFormat_v210"}, 
+    {MFVideoFormat_v216, L"MFVideoFormat_v216"}, 
+    {MFVideoFormat_v410, L"MFVideoFormat_v410"}, 
+    {MFVideoFormat_MP43, L"MFVideoFormat_MP43"}, 
+    {MFVideoFormat_MP4S, L"MFVideoFormat_MP4S"}, 
+    {MFVideoFormat_M4S2, L"MFVideoFormat_M4S2"}, 
+    {MFVideoFormat_MP4V, L"MFVideoFormat_MP4V"}, 
+    {MFVideoFormat_WMV1, L"MFVideoFormat_WMV1"}, 
+    {MFVideoFormat_WMV2, L"MFVideoFormat_WMV2"}, 
+    {MFVideoFormat_WMV3, L"MFVideoFormat_WMV3"}, 
+    {MFVideoFormat_WVC1, L"MFVideoFormat_WVC1"}, 
+    {MFVideoFormat_MSS1, L"MFVideoFormat_MSS1"}, 
+    {MFVideoFormat_MSS2, L"MFVideoFormat_MSS2"}, 
+    {MFVideoFormat_MPG1, L"MFVideoFormat_MPG1"}, 
+    {MFVideoFormat_DVSL, L"MFVideoFormat_DVSL"}, 
+    {MFVideoFormat_DVSD, L"MFVideoFormat_DVSD"}, 
+    {MFVideoFormat_DV25, L"MFVideoFormat_DV25"}, 
+    {MFVideoFormat_DV50, L"MFVideoFormat_DV50"}, 
+    {MFVideoFormat_DVH1, L"MFVideoFormat_DVH1"}, 
+    {MFVideoFormat_DVC, L"MFVideoFormat_DVC"}, 
+    {MFVideoFormat_H264, L"MFVideoFormat_H264"}, 
+    {MFVideoFormat_MJPG, L"MFVideoFormat_MJPG"}, 
+    {MFVideoFormat_MPEG2, L"MFVideoFormat_MPEG2"}, 
+    {MFAudioFormat_Base, L"MFAudioFormat_Base"}, 
+    {MFAudioFormat_PCM , L"MFAudioFormat_PCM"}, 
+    {MFAudioFormat_Float, L"MFAudioFormat_Float"}, 
+    {MFAudioFormat_DTS, L"MFAudioFormat_DTS"}, 
+    {MFAudioFormat_Dolby_AC3_SPDIF, L"MFAudioFormat_Dolby_AC3_SPDIF"}, 
+    {MFAudioFormat_DRM, L"MFAudioFormat_DRM"}, 
+    {MFAudioFormat_WMAudioV8, L"MFAudioFormat_WMAudioV8"}, 
+    {MFAudioFormat_WMAudioV9, L"MFAudioFormat_WMAudioV9"}, 
+    {MFAudioFormat_WMAudio_Lossless, L"MFAudioFormat_WMAudio_Lossless"}, 
+    {MFAudioFormat_WMASPDIF, L"MFAudioFormat_WMASPDIF"}, 
+    {MFAudioFormat_MSP1, L"MFAudioFormat_MSP1"}, 
+    {MFAudioFormat_MP3, L"MFAudioFormat_MP3"}, 
+    {MFAudioFormat_MPEG, L"MFAudioFormat_MPEG"},     
+    {MFAudioFormat_AAC, L"MFAudioFormat_AAC"},     
+    {MFAudioFormat_ADTS, L"MFAudioFormat_ADTS"},     
+    {MFMPEG4Format_Base, L"MFMPEG4Format_Base"},     
+    {MF_MT_MAJOR_TYPE, L"MF_MT_MAJOR_TYPE"}, 
+    {MF_MT_SUBTYPE, L"MF_MT_SUBTYPE"}, 
+    {MF_MT_ALL_SAMPLES_INDEPENDENT,  L"MF_MT_ALL_SAMPLES_INDEPENDENT"}, 
+    {MF_MT_FIXED_SIZE_SAMPLES, L"MF_MT_FIXED_SIZE_SAMPLES"}, 
+    {MF_MT_COMPRESSED, L"MF_MT_COMPRESSED"}, 
+    {MF_MT_SAMPLE_SIZE, L"MF_MT_SAMPLE_SIZE"}, 
+    {MF_MT_WRAPPED_TYPE, L"MF_MT_WRAPPED_TYPE"}, 
+    {MF_MT_AUDIO_NUM_CHANNELS, L"MF_MT_AUDIO_NUM_CHANNELS"}, 
+    {MF_MT_AUDIO_SAMPLES_PER_SECOND, L"MF_MT_AUDIO_SAMPLES_PER_SECOND"}, 
+    {MF_MT_AUDIO_FLOAT_SAMPLES_PER_SECOND, L"MF_MT_AUDIO_FLOAT_SAMPLES_PER_SECOND"}, 
+    {MF_MT_AUDIO_AVG_BYTES_PER_SECOND, L"MF_MT_AUDIO_AVG_BYTES_PER_SECOND"}, 
+    {MF_MT_AUDIO_BLOCK_ALIGNMENT, L"MF_MT_AUDIO_BLOCK_ALIGNMENT"}, 
+    {MF_MT_AUDIO_BITS_PER_SAMPLE, L"MF_MT_AUDIO_BITS_PER_SAMPLE"}, 
+    {MF_MT_AUDIO_VALID_BITS_PER_SAMPLE, L"MF_MT_AUDIO_VALID_BITS_PER_SAMPLE"}, 
+    {MF_MT_AUDIO_SAMPLES_PER_BLOCK, L"MF_MT_AUDIO_SAMPLES_PER_BLOCK"}, 
+    {MF_MT_AUDIO_CHANNEL_MASK, L"MF_MT_AUDIO_CHANNEL_MASK"}, 
+    {MF_MT_AUDIO_FOLDDOWN_MATRIX, L"MF_MT_AUDIO_FOLDDOWN_MATRIX"}, 
+    {MF_MT_AUDIO_WMADRC_PEAKREF, L"MF_MT_AUDIO_WMADRC_PEAKREF"}, 
+    {MF_MT_AUDIO_WMADRC_PEAKTARGET, L"MF_MT_AUDIO_WMADRC_PEAKTARGET"}, 
+    {MF_MT_AUDIO_WMADRC_AVGREF, L"MF_MT_AUDIO_WMADRC_AVGREF"}, 
+    {MF_MT_AUDIO_WMADRC_AVGTARGET, L"MF_MT_AUDIO_WMADRC_AVGTARGET"}, 
+    {MF_MT_AUDIO_PREFER_WAVEFORMATEX, L"MF_MT_AUDIO_PREFER_WAVEFORMATEX"}, 
+    {MF_MT_AAC_PAYLOAD_TYPE, L"MF_MT_AAC_PAYLOAD_TYPE"}, 
+    {MF_MT_AAC_AUDIO_PROFILE_LEVEL_INDICATION, L"MF_MT_AAC_AUDIO_PROFILE_LEVEL_INDICATION"}, 
+    {MF_MT_FRAME_SIZE, L"MF_MT_FRAME_SIZE"}, 
+    {MF_MT_FRAME_RATE, L"MF_MT_FRAME_RATE"}, 
+    {MF_MT_PIXEL_ASPECT_RATIO, L"MF_MT_PIXEL_ASPECT_RATIO"}, 
+    {MF_MT_DRM_FLAGS, L"MF_MT_DRM_FLAGS"}, 
+    {MF_MT_PAD_CONTROL_FLAGS, L"MF_MT_PAD_CONTROL_FLAGS"}, 
+    {MF_MT_SOURCE_CONTENT_HINT, L"MF_MT_SOURCE_CONTENT_HINT"}, 
+    {MF_MT_VIDEO_CHROMA_SITING, L"MF_MT_VIDEO_CHROMA_SITING"}, 
+    {MF_MT_INTERLACE_MODE, L"MF_MT_INTERLACE_MODE"}, 
+    {MF_MT_TRANSFER_FUNCTION, L"MF_MT_TRANSFER_FUNCTION"}, 
+    {MF_MT_VIDEO_PRIMARIES, L"MF_MT_VIDEO_PRIMARIES"}, 
+    {MF_MT_CUSTOM_VIDEO_PRIMARIES, L"MF_MT_CUSTOM_VIDEO_PRIMARIES"}, 
+    {MF_MT_YUV_MATRIX, L"MF_MT_YUV_MATRIX"}, 
+    {MF_MT_VIDEO_LIGHTING, L"MF_MT_VIDEO_LIGHTING"}, 
+    {MF_MT_VIDEO_NOMINAL_RANGE, L"MF_MT_VIDEO_NOMINAL_RANGE"}, 
+    {MF_MT_GEOMETRIC_APERTURE, L"MF_MT_GEOMETRIC_APERTURE"}, 
+    {MF_MT_MINIMUM_DISPLAY_APERTURE, L"MF_MT_MINIMUM_DISPLAY_APERTURE"}, 
+    {MF_MT_PAN_SCAN_APERTURE, L"MF_MT_PAN_SCAN_APERTURE"}, 
+    {MF_MT_PAN_SCAN_ENABLED, L"MF_MT_PAN_SCAN_ENABLED"}, 
+    {MF_MT_AVG_BITRATE, L"MF_MT_AVG_BITRATE"}, 
+    {MF_MT_AVG_BIT_ERROR_RATE, L"MF_MT_AVG_BIT_ERROR_RATE"}, 
+    {MF_MT_MAX_KEYFRAME_SPACING, L"MF_MT_MAX_KEYFRAME_SPACING"}, 
+    {MF_MT_DEFAULT_STRIDE, L"MF_MT_DEFAULT_STRIDE"}, 
+    {MF_MT_PALETTE, L"MF_MT_PALETTE"}, 
+    {MF_MT_USER_DATA, L"MF_MT_USER_DATA"}, 
+    {MF_MT_AM_FORMAT_TYPE, L"MF_MT_AM_FORMAT_TYPE"}, 
+    {MF_MT_MPEG_START_TIME_CODE, L"MF_MT_MPEG_START_TIME_CODE"}, 
+    {MF_MT_MPEG2_PROFILE, L"MF_MT_MPEG2_PROFILE"}, 
+    {MF_MT_MPEG2_LEVEL, L"MF_MT_MPEG2_LEVEL"}, 
+    {MF_MT_MPEG2_FLAGS, L"MF_MT_MPEG2_FLAGS"}, 
+    {MF_MT_MPEG_SEQUENCE_HEADER, L"MF_MT_MPEG_SEQUENCE_HEADER"}, 
+    {MF_MT_DV_AAUX_SRC_PACK_0, L"MF_MT_DV_AAUX_SRC_PACK_0"}, 
+    {MF_MT_DV_AAUX_CTRL_PACK_0, L"MF_MT_DV_AAUX_CTRL_PACK_0"}, 
+    {MF_MT_DV_AAUX_SRC_PACK_1, L"MF_MT_DV_AAUX_SRC_PACK_1"}, 
+    {MF_MT_DV_AAUX_CTRL_PACK_1, L"MF_MT_DV_AAUX_CTRL_PACK_1"}, 
+    {MF_MT_DV_VAUX_SRC_PACK, L"MF_MT_DV_VAUX_SRC_PACK"}, 
+    {MF_MT_DV_VAUX_CTRL_PACK, L"MF_MT_DV_VAUX_CTRL_PACK"}, 
+    {MF_MT_ARBITRARY_HEADER, L"MF_MT_ARBITRARY_HEADER"}, 
+    {MF_MT_ARBITRARY_FORMAT, L"MF_MT_ARBITRARY_FORMAT"}, 
+    {MF_MT_IMAGE_LOSS_TOLERANT, L"MF_MT_IMAGE_LOSS_TOLERANT"}, 
+    {MF_MT_MPEG4_SAMPLE_DESCRIPTION, L"MF_MT_MPEG4_SAMPLE_DESCRIPTION"}, 
+    {MF_MT_MPEG4_CURRENT_SAMPLE_ENTRY, L"MF_MT_MPEG4_CURRENT_SAMPLE_ENTRY"}, 
+    {MF_MT_ORIGINAL_4CC, L"MF_MT_ORIGINAL_4CC"}, 
+    {MF_MT_ORIGINAL_WAVE_FORMAT_TAG, L"MF_MT_ORIGINAL_WAVE_FORMAT_TAG"}, 
+    {MF_MT_FRAME_RATE_RANGE_MIN, L"MF_MT_FRAME_RATE_RANGE_MIN"}, 
+    {MF_MT_FRAME_RATE_RANGE_MAX, L"MF_MT_FRAME_RATE_RANGE_MAX"}, 
+    {MF_MT_DV_VAUX_CTRL_PACK, L"MF_MT_DV_VAUX_CTRL_PACK"}, 
+    {MFMediaType_Default, L"MFMediaType_Default"}, 
+    {MFMediaType_Audio, L"MFMediaType_Audio"}, 
+    {MFMediaType_Video, L"MFMediaType_Video"}, 
+    {MFMediaType_Protected, L"MFMediaType_Protected"}, 
+    {MFMediaType_SAMI, L"MFMediaType_SAMI"}, 
+    {MFMediaType_Script, L"MFMediaType_Script"}, 
+    {MFMediaType_Image, L"MFMediaType_Image"}, 
+    {MFMediaType_HTML, L"MFMediaType_HTML"}, 
+    {MFMediaType_Binary, L"MFMediaType_Binary"}, 
+    {MFMediaType_FileTransfer, L"MFMediaType_FileTransfer"}, 
+    {AM_MEDIA_TYPE_REPRESENTATION, L"AM_MEDIA_TYPE_REPRESENTATION"}, 
+    {FORMAT_MFVideoFormat, L"FORMAT_MFVideoFormat"}, 
+
+// From uuids.h
+    {MEDIATYPE_NULL, L"MEDIATYPE_NULL"}, 
+    {MEDIASUBTYPE_NULL, L"MEDIASUBTYPE_NULL"}, 
+    {MEDIASUBTYPE_None, L"MEDIASUBTYPE_None"}, 
+    {MEDIATYPE_Video, L"MEDIATYPE_Video"}, 
+    {MEDIATYPE_Audio, L"MEDIATYPE_Audio"}, 
+    {MEDIATYPE_Text, L"MEDIATYPE_Text"}, 
+    {MEDIATYPE_Midi, L"MEDIATYPE_Midi"}, 
+    {MEDIATYPE_Stream, L"MEDIATYPE_Stream"}, 
+    {MEDIATYPE_Interleaved, L"MEDIATYPE_Interleaved"}, 
+    {MEDIATYPE_File, L"MEDIATYPE_File"}, 
+    {MEDIATYPE_ScriptCommand, L"MEDIATYPE_ScriptCommand"}, 
+    {MEDIATYPE_AUXLine21Data, L"MEDIATYPE_AUXLine21Data"}, 
+    {MEDIATYPE_AUXTeletextPage, L"MEDIATYPE_AUXTeletextPage"}, 
+    {MEDIATYPE_CC_CONTAINER, L"MEDIATYPE_CC_CONTAINER"}, 
+    {MEDIATYPE_DTVCCData, L"MEDIATYPE_DTVCCData"}, 
+    {MEDIATYPE_MSTVCaption, L"MEDIATYPE_MSTVCaption"}, 
+    {MEDIATYPE_VBI, L"MEDIATYPE_VBI"}, 
+    {MEDIASUBTYPE_DVB_SUBTITLES, L"MEDIASUBTYPE_DVB_SUBTITLES"}, 
+    {MEDIASUBTYPE_ISDB_CAPTIONS, L"MEDIASUBTYPE_ISDB_CAPTIONS"}, 
+    {MEDIASUBTYPE_ISDB_SUPERIMPOSE, L"MEDIASUBTYPE_ISDB_SUPERIMPOSE"}, 
+    {MEDIATYPE_Timecode, L"MEDIATYPE_Timecode"}, 
+    {MEDIATYPE_LMRT, L"MEDIATYPE_LMRT"}, 
+    {MEDIATYPE_URL_STREAM, L"MEDIATYPE_URL_STREAM"}, 
+    {MEDIASUBTYPE_CLPL, L"MEDIASUBTYPE_CLPL"}, 
+    {MEDIASUBTYPE_YUYV, L"MEDIASUBTYPE_YUYV"}, 
+    {MEDIASUBTYPE_IYUV, L"MEDIASUBTYPE_IYUV"}, 
+    {MEDIASUBTYPE_YVU9, L"MEDIASUBTYPE_YVU9"}, 
+    {MEDIASUBTYPE_Y411, L"MEDIASUBTYPE_Y411"}, 
+    {MEDIASUBTYPE_Y41P, L"MEDIASUBTYPE_Y41P"}, 
+    {MEDIASUBTYPE_YUY2, L"MEDIASUBTYPE_YUY2"}, 
+    {MEDIASUBTYPE_YVYU, L"MEDIASUBTYPE_YVYU"}, 
+    {MEDIASUBTYPE_UYVY, L"MEDIASUBTYPE_UYVY"}, 
+    {MEDIASUBTYPE_Y211, L"MEDIASUBTYPE_Y211"}, 
+    {MEDIASUBTYPE_CLJR, L"MEDIASUBTYPE_CLJR"}, 
+    {MEDIASUBTYPE_IF09, L"MEDIASUBTYPE_IF09"}, 
+    {MEDIASUBTYPE_CPLA, L"MEDIASUBTYPE_CPLA"}, 
+    {MEDIASUBTYPE_MJPG, L"MEDIASUBTYPE_MJPG"}, 
+    {MEDIASUBTYPE_TVMJ, L"MEDIASUBTYPE_TVMJ"}, 
+    {MEDIASUBTYPE_WAKE, L"MEDIASUBTYPE_WAKE"}, 
+    {MEDIASUBTYPE_CFCC, L"MEDIASUBTYPE_CFCC"}, 
+    {MEDIASUBTYPE_IJPG, L"MEDIASUBTYPE_IJPG"}, 
+    {MEDIASUBTYPE_Plum, L"MEDIASUBTYPE_Plum"}, 
+    {MEDIASUBTYPE_DVCS, L"MEDIASUBTYPE_DVCS"}, 
+    {MEDIASUBTYPE_H264, L"MEDIASUBTYPE_H264"}, 
+    {MEDIASUBTYPE_DVSD, L"MEDIASUBTYPE_DVSD"}, 
+    {MEDIASUBTYPE_MDVF, L"MEDIASUBTYPE_MDVF"}, 
+    {MEDIASUBTYPE_RGB1, L"MEDIASUBTYPE_RGB1"}, 
+    {MEDIASUBTYPE_RGB4, L"MEDIASUBTYPE_RGB4"}, 
+    {MEDIASUBTYPE_RGB8, L"MEDIASUBTYPE_RGB8"}, 
+    {MEDIASUBTYPE_RGB565, L"MEDIASUBTYPE_RGB565"}, 
+    {MEDIASUBTYPE_RGB555, L"MEDIASUBTYPE_RGB555"}, 
+    {MEDIASUBTYPE_RGB24, L"MEDIASUBTYPE_RGB24"}, 
+    {MEDIASUBTYPE_RGB32, L"MEDIASUBTYPE_RGB32"}, 
+    {MEDIASUBTYPE_ARGB1555, L"MEDIASUBTYPE_ARGB1555"}, 
+    {MEDIASUBTYPE_ARGB4444, L"MEDIASUBTYPE_ARGB4444"}, 
+    {MEDIASUBTYPE_ARGB32, L"MEDIASUBTYPE_ARGB32"}, 
+    {MEDIASUBTYPE_A2R10G10B10, L"MEDIASUBTYPE_A2R10G10B10"}, 
+    {MEDIASUBTYPE_A2B10G10R10, L"MEDIASUBTYPE_A2B10G10R10"}, 
+    {MEDIASUBTYPE_AYUV, L"MEDIASUBTYPE_AYUV"}, 
+    {MEDIASUBTYPE_AI44, L"MEDIASUBTYPE_AI44"}, 
+    {MEDIASUBTYPE_IA44, L"MEDIASUBTYPE_IA44"}, 
+    {MEDIASUBTYPE_RGB32_D3D_DX7_RT, L"MEDIASUBTYPE_RGB32_D3D_DX7_RT"}, 
+    {MEDIASUBTYPE_RGB16_D3D_DX7_RT, L"MEDIASUBTYPE_RGB16_D3D_DX7_RT"}, 
+    {MEDIASUBTYPE_ARGB32_D3D_DX7_RT, L"MEDIASUBTYPE_ARGB32_D3D_DX7_RT"}, 
+    {MEDIASUBTYPE_ARGB4444_D3D_DX7_RT, L"MEDIASUBTYPE_ARGB4444_D3D_DX7_RT"}, 
+    {MEDIASUBTYPE_ARGB1555_D3D_DX7_RT, L"MEDIASUBTYPE_ARGB1555_D3D_DX7_RT"}, 
+    {MEDIASUBTYPE_RGB32_D3D_DX9_RT, L"MEDIASUBTYPE_RGB32_D3D_DX9_RT"}, 
+    {MEDIASUBTYPE_RGB16_D3D_DX9_RT, L"MEDIASUBTYPE_RGB16_D3D_DX9_RT"}, 
+    {MEDIASUBTYPE_ARGB32_D3D_DX9_RT, L"MEDIASUBTYPE_ARGB32_D3D_DX9_RT"}, 
+    {MEDIASUBTYPE_ARGB4444_D3D_DX9_RT, L"MEDIASUBTYPE_ARGB4444_D3D_DX9_RT"}, 
+    {MEDIASUBTYPE_ARGB1555_D3D_DX9_RT, L"MEDIASUBTYPE_ARGB1555_D3D_DX9_RT"}, 
+    {MEDIASUBTYPE_YV12, L"MEDIASUBTYPE_YV12"}, 
+    {MEDIASUBTYPE_NV12, L"MEDIASUBTYPE_NV12"}, 
+    {MEDIASUBTYPE_NV11, L"MEDIASUBTYPE_NV11"}, 
+    {MEDIASUBTYPE_P208, L"MEDIASUBTYPE_P208"}, 
+    {MEDIASUBTYPE_P210, L"MEDIASUBTYPE_P210"}, 
+    {MEDIASUBTYPE_P216, L"MEDIASUBTYPE_P216"}, 
+    {MEDIASUBTYPE_P010, L"MEDIASUBTYPE_P010"}, 
+    {MEDIASUBTYPE_P016, L"MEDIASUBTYPE_P016"}, 
+    {MEDIASUBTYPE_Y210, L"MEDIASUBTYPE_Y210"}, 
+    {MEDIASUBTYPE_Y216, L"MEDIASUBTYPE_Y216"}, 
+    {MEDIASUBTYPE_P408, L"MEDIASUBTYPE_P408"}, 
+    {MEDIASUBTYPE_NV24, L"MEDIASUBTYPE_NV24"}, 
+    {MEDIASUBTYPE_IMC1, L"MEDIASUBTYPE_IMC1"}, 
+    {MEDIASUBTYPE_IMC2, L"MEDIASUBTYPE_IMC2"}, 
+    {MEDIASUBTYPE_IMC3, L"MEDIASUBTYPE_IMC3"}, 
+    {MEDIASUBTYPE_IMC4, L"MEDIASUBTYPE_IMC4"}, 
+    {MEDIASUBTYPE_S340, L"MEDIASUBTYPE_S340"}, 
+    {MEDIASUBTYPE_S342, L"MEDIASUBTYPE_S342"}, 
+    {MEDIASUBTYPE_Overlay, L"MEDIASUBTYPE_Overlay"}, 
+    {MEDIASUBTYPE_MPEG1Packet, L"MEDIASUBTYPE_MPEG1Packet"}, 
+    {MEDIASUBTYPE_MPEG1Payload, L"MEDIASUBTYPE_MPEG1Payload"}, 
+    {MEDIASUBTYPE_MPEG1AudioPayload, L"MEDIASUBTYPE_MPEG1AudioPayload"}, 
+    {MEDIATYPE_MPEG1SystemStream, L"MEDIATYPE_MPEG1SystemStream"}, 
+    {MEDIASUBTYPE_MPEG1System, L"MEDIASUBTYPE_MPEG1System"}, 
+    {MEDIASUBTYPE_MPEG1VideoCD, L"MEDIASUBTYPE_MPEG1VideoCD"}, 
+    {MEDIASUBTYPE_MPEG1Video, L"MEDIASUBTYPE_MPEG1Video"}, 
+    {MEDIASUBTYPE_MPEG1Audio, L"MEDIASUBTYPE_MPEG1Audio"}, 
+    {MEDIASUBTYPE_Avi, L"MEDIASUBTYPE_Avi"}, 
+    {MEDIASUBTYPE_Asf, L"MEDIASUBTYPE_Asf"}, 
+    {MEDIASUBTYPE_QTMovie, L"MEDIASUBTYPE_QTMovie"}, 
+    {MEDIASUBTYPE_QTRpza, L"MEDIASUBTYPE_QTRpza"}, 
+    {MEDIASUBTYPE_QTSmc, L"MEDIASUBTYPE_QTSmc"}, 
+    {MEDIASUBTYPE_QTRle, L"MEDIASUBTYPE_QTRle"}, 
+    {MEDIASUBTYPE_QTJpeg, L"MEDIASUBTYPE_QTJpeg"}, 
+    {MEDIASUBTYPE_PCMAudio_Obsolete, L"MEDIASUBTYPE_PCMAudio_Obsolete"}, 
+    {MEDIASUBTYPE_PCM, L"MEDIASUBTYPE_PCM"}, 
+    {MEDIASUBTYPE_WAVE, L"MEDIASUBTYPE_WAVE"}, 
+    {MEDIASUBTYPE_AU, L"MEDIASUBTYPE_AU"}, 
+    {MEDIASUBTYPE_AIFF, L"MEDIASUBTYPE_AIFF"}, 
+    {MEDIASUBTYPE_dvsd, L"MEDIASUBTYPE_dvsd"}, 
+    {MEDIASUBTYPE_dvhd, L"MEDIASUBTYPE_dvhd"}, 
+    {MEDIASUBTYPE_dvsl, L"MEDIASUBTYPE_dvsl"}, 
+    {MEDIASUBTYPE_dv25, L"MEDIASUBTYPE_dv25"}, 
+    {MEDIASUBTYPE_dv50, L"MEDIASUBTYPE_dv50"}, 
+    {MEDIASUBTYPE_dvh1, L"MEDIASUBTYPE_dvh1"}, 
+    {MEDIASUBTYPE_Line21_BytePair, L"MEDIASUBTYPE_Line21_BytePair"}, 
+    {MEDIASUBTYPE_Line21_GOPPacket, L"MEDIASUBTYPE_Line21_GOPPacket"}, 
+    {MEDIASUBTYPE_Line21_VBIRawData, L"MEDIASUBTYPE_Line21_VBIRawData"}, 
+    {MEDIASUBTYPE_708_608Data, L"MEDIASUBTYPE_708_608Data"}, 
+    {MEDIASUBTYPE_DtvCcData, L"MEDIASUBTYPE_DtvCcData"}, 
+    {MEDIASUBTYPE_CC_CONTAINER, L"MEDIASUBTYPE_CC_CONTAINER"}, 
+    {MEDIASUBTYPE_TELETEXT, L"MEDIASUBTYPE_TELETEXT"}, 
+    {MEDIASUBTYPE_VBI, L"MEDIASUBTYPE_VBI"}, 
+    {MEDIASUBTYPE_WSS, L"MEDIASUBTYPE_WSS"}, 
+    {MEDIASUBTYPE_XDS, L"MEDIASUBTYPE_XDS"}, 
+    {MEDIASUBTYPE_VPS, L"MEDIASUBTYPE_VPS"}, 
+    {MEDIASUBTYPE_DRM_Audio, L"MEDIASUBTYPE_DRM_Audio"}, 
+    {MEDIASUBTYPE_IEEE_FLOAT, L"MEDIASUBTYPE_IEEE_FLOAT"}, 
+    {MEDIASUBTYPE_DOLBY_AC3_SPDIF, L"MEDIASUBTYPE_DOLBY_AC3_SPDIF"}, 
+    {MEDIASUBTYPE_RAW_SPORT, L"MEDIASUBTYPE_RAW_SPORT"}, 
+    {MEDIASUBTYPE_SPDIF_TAG_241h, L"MEDIASUBTYPE_SPDIF_TAG_241h"}, 
+    {FORMAT_None, L"FORMAT_None"}, 
+    {FORMAT_VideoInfo, L"FORMAT_VideoInfo"}, 
+    {FORMAT_VideoInfo2, L"FORMAT_VideoInfo2"}, 
+    {FORMAT_WaveFormatEx, L"FORMAT_WaveFormatEx"}, 
+    {FORMAT_MPEGVideo, L"FORMAT_MPEGVideo"}, 
+    {FORMAT_MPEGStreams, L"FORMAT_MPEGStreams"}, 
+    {FORMAT_DvInfo, L"FORMAT_DvInfo"}, 
+    {FORMAT_525WSS, L"FORMAT_525WSS"}, 
+    {FORMAT_AnalogVideo, L"FORMAT_AnalogVideo"}, 
+    {MEDIATYPE_AnalogVideo, L"MEDIATYPE_AnalogVideo"}, 
+    {MEDIASUBTYPE_AnalogVideo_NTSC_M, L"MEDIASUBTYPE_AnalogVideo_NTSC_M"}, 
+    {MEDIASUBTYPE_AnalogVideo_PAL_B, L"MEDIASUBTYPE_AnalogVideo_PAL_B"}, 
+    {MEDIASUBTYPE_AnalogVideo_PAL_D, L"MEDIASUBTYPE_AnalogVideo_PAL_D"}, 
+    {MEDIASUBTYPE_AnalogVideo_PAL_G, L"MEDIASUBTYPE_AnalogVideo_PAL_G"}, 
+    {MEDIASUBTYPE_AnalogVideo_PAL_H, L"MEDIASUBTYPE_AnalogVideo_PAL_H"}, 
+    {MEDIASUBTYPE_AnalogVideo_PAL_I, L"MEDIASUBTYPE_AnalogVideo_PAL_I"}, 
+    {MEDIASUBTYPE_AnalogVideo_PAL_M, L"MEDIASUBTYPE_AnalogVideo_PAL_M"}, 
+    {MEDIASUBTYPE_AnalogVideo_PAL_N, L"MEDIASUBTYPE_AnalogVideo_PAL_N"}, 
+    {MEDIASUBTYPE_AnalogVideo_PAL_N_COMBO, L"MEDIASUBTYPE_AnalogVideo_PAL_N_COMBO"}, 
+    {MEDIASUBTYPE_AnalogVideo_SECAM_B, L"MEDIASUBTYPE_AnalogVideo_SECAM_B"}, 
+    {MEDIASUBTYPE_AnalogVideo_SECAM_D, L"MEDIASUBTYPE_AnalogVideo_SECAM_D"}, 
+    {MEDIASUBTYPE_AnalogVideo_SECAM_G, L"MEDIASUBTYPE_AnalogVideo_SECAM_G"}, 
+    {MEDIASUBTYPE_AnalogVideo_SECAM_H, L"MEDIASUBTYPE_AnalogVideo_SECAM_H"}, 
+    {MEDIASUBTYPE_AnalogVideo_SECAM_K, L"MEDIASUBTYPE_AnalogVideo_SECAM_K"}, 
+    {MEDIASUBTYPE_AnalogVideo_SECAM_K1, L"MEDIASUBTYPE_AnalogVideo_SECAM_K1"}, 
+    {MEDIASUBTYPE_AnalogVideo_SECAM_L, L"MEDIASUBTYPE_AnalogVideo_SECAM_L"}, 
+    {MEDIATYPE_AnalogAudio, L"MEDIATYPE_AnalogAudio"}, 
+    {FORMAT_CAPTIONED_H264VIDEO, L"FORMAT_CAPTIONED_H264VIDEO"}, 
+    {FORMAT_CC_CONTAINER, L"FORMAT_CC_CONTAINER"}, 
+    {CAPTION_FORMAT_ATSC, L"CAPTION_FORMAT_ATSC"}, 
+    {CAPTION_FORMAT_DVB, L"CAPTION_FORMAT_DVB"}, 
+    {CAPTION_FORMAT_DIRECTV, L"CAPTION_FORMAT_DIRECTV"}, 
+    {CAPTION_FORMAT_ECHOSTAR, L"CAPTION_FORMAT_ECHOSTAR"}, 
+    {FORMAT_CAPTIONED_MPEG2VIDEO, L"FORMAT_CAPTIONED_MPEG2VIDEO"}, 
+
+// From wmcodecdsp.h
+    {MEDIASUBTYPE_Y41T, L"MEDIASUBTYPE_Y41T"}, 
+    {MEDIASUBTYPE_Y42T, L"MEDIASUBTYPE_Y42T"}, 
+    {MEDIASUBTYPE_NV11, L"MEDIASUBTYPE_NV11"}, 
+    {MEDIASUBTYPE_V216, L"MEDIASUBTYPE_V216"}, 
+    {MEDIASUBTYPE_V410, L"MEDIASUBTYPE_V410"}, 
+    {MEDIASUBTYPE_v210, L"MEDIASUBTYPE_v210"}, 
+    {MEDIASUBTYPE_I420, L"MEDIASUBTYPE_I420"}, 
+    {MEDIASUBTYPE_WVC1, L"MEDIASUBTYPE_WVC1"}, 
+    {MEDIASUBTYPE_wvc1, L"MEDIASUBTYPE_wvc1"}, 
+    {MEDIASUBTYPE_WMVA, L"MEDIASUBTYPE_WMVA"}, 
+    {MEDIASUBTYPE_wmva, L"MEDIASUBTYPE_wmva"}, 
+    {MEDIASUBTYPE_WMVB, L"MEDIASUBTYPE_WMVB"}, 
+    {MEDIASUBTYPE_wmvb, L"MEDIASUBTYPE_wmvb"}, 
+    {MEDIASUBTYPE_WMVR, L"MEDIASUBTYPE_WMVR"}, 
+    {MEDIASUBTYPE_wmvr, L"MEDIASUBTYPE_wmvr"}, 
+    {MEDIASUBTYPE_WMVP, L"MEDIASUBTYPE_WMVP"}, 
+    {MEDIASUBTYPE_wmvp, L"MEDIASUBTYPE_wmvp"}, 
+    {MEDIASUBTYPE_WVP2, L"MEDIASUBTYPE_WVP2"}, 
+    {MEDIASUBTYPE_wvp2, L"MEDIASUBTYPE_wvp2"}, 
+    {MEDIASUBTYPE_WMV3, L"MEDIASUBTYPE_WMV3"}, 
+    {MEDIASUBTYPE_wmv3, L"MEDIASUBTYPE_wmv3"}, 
+    {MEDIASUBTYPE_WMV2, L"MEDIASUBTYPE_WMV2"}, 
+    {MEDIASUBTYPE_wmv2, L"MEDIASUBTYPE_wmv2"}, 
+    {MEDIASUBTYPE_WMV1, L"MEDIASUBTYPE_WMV1"}, 
+    {MEDIASUBTYPE_wmv1, L"MEDIASUBTYPE_wmv1"}, 
+    {MEDIASUBTYPE_MPG4, L"MEDIASUBTYPE_MPG4"}, 
+    {MEDIASUBTYPE_mpg4, L"MEDIASUBTYPE_mpg4"}, 
+    {MEDIASUBTYPE_MP42, L"MEDIASUBTYPE_MP42"}, 
+    {MEDIASUBTYPE_mp42, L"MEDIASUBTYPE_mp42"}, 
+    {MEDIASUBTYPE_MP43, L"MEDIASUBTYPE_MP43"}, 
+    {MEDIASUBTYPE_mp43, L"MEDIASUBTYPE_mp43"}, 
+    {MEDIASUBTYPE_MP4S, L"MEDIASUBTYPE_MP4S"}, 
+    {MEDIASUBTYPE_mp4s, L"MEDIASUBTYPE_mp4s"}, 
+    {MEDIASUBTYPE_M4S2, L"MEDIASUBTYPE_M4S2"}, 
+    {MEDIASUBTYPE_m4s2, L"MEDIASUBTYPE_m4s2"}, 
+    {MEDIASUBTYPE_MSS1, L"MEDIASUBTYPE_MSS1"}, 
+    {MEDIASUBTYPE_MSS2, L"MEDIASUBTYPE_MSS2"}, 
+    {MEDIASUBTYPE_MSAUDIO1, L"MEDIASUBTYPE_MSAUDIO1"}, 
+    {MEDIASUBTYPE_WMAUDIO2, L"MEDIASUBTYPE_WMAUDIO2"}, 
+    {MEDIASUBTYPE_WMAUDIO3, L"MEDIASUBTYPE_WMAUDIO3"}, 
+    {MEDIASUBTYPE_WMAUDIO_LOSSLESS, L"MEDIASUBTYPE_WMAUDIO_LOSSLESS"}, 
+    {MEDIASUBTYPE_WMASPDIF, L"MEDIASUBTYPE_WMASPDIF"}, 
+    {MEDIASUBTYPE_WMAUDIO4, L"MEDIASUBTYPE_WMAUDIO4"}, 
+    {MEDIASUBTYPE_MPEG_ADTS_AAC, L"MEDIASUBTYPE_MPEG_ADTS_AAC"}, 
+    {MEDIASUBTYPE_MPEG_RAW_AAC, L"MEDIASUBTYPE_MPEG_RAW_AAC"},  
+    {MEDIASUBTYPE_MPEG_LOAS, L"MEDIASUBTYPE_MPEG_LOAS"},     
+    {MEDIASUBTYPE_NOKIA_MPEG_ADTS_AAC, L"MEDIASUBTYPE_NOKIA_MPEG_ADTS_AAC"}, 
+    {MEDIASUBTYPE_NOKIA_MPEG_RAW_AAC, L"MEDIASUBTYPE_NOKIA_MPEG_RAW_AAC"},  
+    {MEDIASUBTYPE_VODAFONE_MPEG_ADTS_AAC, L"MEDIASUBTYPE_VODAFONE_MPEG_ADTS_AAC"}, 
+    {MEDIASUBTYPE_VODAFONE_MPEG_RAW_AAC, L"MEDIASUBTYPE_VODAFONE_MPEG_RAW_AAC"},  
+    {MEDIASUBTYPE_MPEG_HEAAC, L"MEDIASUBTYPE_MPEG_HEAAC"}, 
+    {MEDIASUBTYPE_RAW_AAC1, L"MEDIASUBTYPE_RAW_AAC1"}, 
+    {MEDIASUBTYPE_DVM, L"MEDIASUBTYPE_DVM"}, 
+    {MEDIASUBTYPE_DTS2, L"MEDIASUBTYPE_DTS2"}, 
+    {MEDIASUBTYPE_DOLBY_DDPLUS, L"MEDIASUBTYPE_DOLBY_DDPLUS"}, 
+    {MEDIASUBTYPE_DOLBY_TRUEHD, L"MEDIASUBTYPE_DOLBY_TRUEHD"}, 
+    {MEDIASUBTYPE_DTS_HD, L"MEDIASUBTYPE_DTS_HD"}, 
+    {MEDIASUBTYPE_h264, L"MEDIASUBTYPE_h264"}, 
+    {MEDIASUBTYPE_AVC1, L"MEDIASUBTYPE_AVC1"}, 
+    {MEDIASUBTYPE_X264, L"MEDIASUBTYPE_X264"}, 
+    {MEDIASUBTYPE_x264, L"MEDIASUBTYPE_x264"}, 
+
+// From mfidl.h
+    {MF_PD_PMPHOST_CONTEXT, L"MF_PD_PMPHOST_CONTEXT"}, 
+    {MF_PD_APP_CONTEXT, L"MF_PD_APP_CONTEXT"}, 
+    {MF_PD_DURATION, L"MF_PD_DURATION"}, 
+    {MF_PD_TOTAL_FILE_SIZE, L"MF_PD_TOTAL_FILE_SIZE"}, 
+    {MF_PD_AUDIO_ENCODING_BITRATE, L"MF_PD_AUDIO_ENCODING_BITRATE"}, 
+    {MF_PD_VIDEO_ENCODING_BITRATE, L"MF_PD_VIDEO_ENCODING_BITRATE"}, 
+    {MF_PD_MIME_TYPE, L"MF_PD_MIME_TYPE"}, 
+    {MF_PD_LAST_MODIFIED_TIME, L"MF_PD_LAST_MODIFIED_TIME"}, 
+    {MF_PD_PLAYBACK_ELEMENT_ID, L"MF_PD_PLAYBACK_ELEMENT_ID"}, 
+    {MF_PD_PREFERRED_LANGUAGE, L"MF_PD_PREFERRED_LANGUAGE"}, 
+    {MF_PD_PLAYBACK_BOUNDARY_TIME, L"MF_PD_PLAYBACK_BOUNDARY_TIME"}, 
+    {MF_PD_AUDIO_ISVARIABLEBITRATE, L"MF_PD_AUDIO_ISVARIABLEBITRATE"}, 
+    {MF_SD_LANGUAGE, L"MF_SD_LANGUAGE"}, 
+    {MF_SD_PROTECTED, L"MF_SD_PROTECTED"}, 
+    {MF_SD_STREAM_NAME, L"MF_SD_STREAM_NAME"}, 
+    {MF_SD_MUTUALLY_EXCLUSIVE, L"MF_SD_MUTUALLY_EXCLUSIVE"}, 
+
+//From wmcontainer.h
+    {MF_PD_ASF_FILEPROPERTIES_FILE_ID, L"MF_PD_ASF_FILEPROPERTIES_FILE_ID"}, 
+    {MF_PD_ASF_FILEPROPERTIES_CREATION_TIME, L"MF_PD_ASF_FILEPROPERTIES_CREATION_TIME"}, 
+    {MF_PD_ASF_FILEPROPERTIES_PACKETS, L"MF_PD_ASF_FILEPROPERTIES_PACKETS"}, 
+    {MF_PD_ASF_FILEPROPERTIES_PLAY_DURATION, L"MF_PD_ASF_FILEPROPERTIES_PLAY_DURATION"}, 
+    {MF_PD_ASF_FILEPROPERTIES_SEND_DURATION, L"MF_PD_ASF_FILEPROPERTIES_SEND_DURATION"}, 
+    {MF_PD_ASF_FILEPROPERTIES_PREROLL, L"MF_PD_ASF_FILEPROPERTIES_PREROLL"}, 
+    {MF_PD_ASF_FILEPROPERTIES_FLAGS, L"MF_PD_ASF_FILEPROPERTIES_FLAGS"}, 
+    {MF_PD_ASF_FILEPROPERTIES_MIN_PACKET_SIZE, L"MF_PD_ASF_FILEPROPERTIES_MIN_PACKET_SIZE"}, 
+    {MF_PD_ASF_FILEPROPERTIES_MAX_PACKET_SIZE, L"MF_PD_ASF_FILEPROPERTIES_MAX_PACKET_SIZE"}, 
+    {MF_PD_ASF_FILEPROPERTIES_MAX_BITRATE, L"MF_PD_ASF_FILEPROPERTIES_MAX_BITRATE"}, 
+    {MF_PD_ASF_CONTENTENCRYPTION_TYPE, L"MF_PD_ASF_CONTENTENCRYPTION_TYPE"}, 
+    {MF_PD_ASF_CONTENTENCRYPTION_KEYID, L"MF_PD_ASF_CONTENTENCRYPTION_KEYID"}, 
+    {MF_PD_ASF_CONTENTENCRYPTION_SECRET_DATA, L"MF_PD_ASF_CONTENTENCRYPTION_SECRET_DATA"}, 
+    {MF_PD_ASF_CONTENTENCRYPTION_LICENSE_URL, L"MF_PD_ASF_CONTENTENCRYPTION_LICENSE_URL"}, 
+    {MF_PD_ASF_CONTENTENCRYPTIONEX_ENCRYPTION_DATA, L"MF_PD_ASF_CONTENTENCRYPTIONEX_ENCRYPTION_DATA"}, 
+    {MF_PD_ASF_LANGLIST, L"MF_PD_ASF_LANGLIST"}, 
+    {MF_PD_ASF_LANGLIST_LEGACYORDER, L"MF_PD_ASF_LANGLIST_LEGACYORDER"}, 
+    {MF_PD_ASF_MARKER, L"MF_PD_ASF_MARKER"}, 
+    {MF_PD_ASF_SCRIPT, L"MF_PD_ASF_SCRIPT"}, 
+    {MF_PD_ASF_CODECLIST, L"MF_PD_ASF_CODECLIST"}, 
+    {MF_PD_ASF_METADATA_IS_VBR, L"MF_PD_ASF_METADATA_IS_VBR"}, 
+    {MF_PD_ASF_METADATA_V8_VBRPEAK, L"MF_PD_ASF_METADATA_V8_VBRPEAK"}, 
+    {MF_PD_ASF_METADATA_V8_BUFFERAVERAGE, L"MF_PD_ASF_METADATA_V8_BUFFERAVERAGE"}, 
+    {MF_PD_ASF_METADATA_LEAKY_BUCKET_PAIRS, L"MF_PD_ASF_METADATA_LEAKY_BUCKET_PAIRS"}, 
+    {MF_PD_ASF_DATA_START_OFFSET, L"MF_PD_ASF_DATA_START_OFFSET"}, 
+    {MF_PD_ASF_DATA_LENGTH, L"MF_PD_ASF_DATA_LENGTH"}, 
+    {MF_SD_ASF_EXTSTRMPROP_LANGUAGE_ID_INDEX, L"MF_SD_ASF_EXTSTRMPROP_LANGUAGE_ID_INDEX"}, 
+    {MF_SD_ASF_EXTSTRMPROP_AVG_DATA_BITRATE, L"MF_SD_ASF_EXTSTRMPROP_AVG_DATA_BITRATE"}, 
+    {MF_SD_ASF_EXTSTRMPROP_AVG_BUFFERSIZE, L"MF_SD_ASF_EXTSTRMPROP_AVG_BUFFERSIZE"}, 
+    {MF_SD_ASF_EXTSTRMPROP_MAX_DATA_BITRATE, L"MF_SD_ASF_EXTSTRMPROP_MAX_DATA_BITRATE"}, 
+    {MF_SD_ASF_EXTSTRMPROP_MAX_BUFFERSIZE, L"MF_SD_ASF_EXTSTRMPROP_MAX_BUFFERSIZE"}, 
+    {MF_SD_ASF_STREAMBITRATES_BITRATE, L"MF_SD_ASF_STREAMBITRATES_BITRATE"}, 
+    {MF_SD_ASF_METADATA_DEVICE_CONFORMANCE_TEMPLATE, L"MF_SD_ASF_METADATA_DEVICE_CONFORMANCE_TEMPLATE"}, 
+    {MF_PD_ASF_INFO_HAS_AUDIO, L"MF_PD_ASF_INFO_HAS_AUDIO"}, 
+    {MF_PD_ASF_INFO_HAS_VIDEO, L"MF_PD_ASF_INFO_HAS_VIDEO"}, 
+    {MF_PD_ASF_INFO_HAS_NON_AUDIO_VIDEO, L"MF_PD_ASF_INFO_HAS_NON_AUDIO_VIDEO"}, 
+    {MF_ASFPROFILE_MINPACKETSIZE, L"MF_ASFPROFILE_MINPACKETSIZE"}, 
+    {MF_ASFPROFILE_MAXPACKETSIZE, L"MF_ASFPROFILE_MAXPACKETSIZE"}, 
+    {MF_ASFSTREAMCONFIG_LEAKYBUCKET1, L"MF_ASFSTREAMCONFIG_LEAKYBUCKET1"}, 
+    {MF_ASFSTREAMCONFIG_LEAKYBUCKET2, L"MF_ASFSTREAMCONFIG_LEAKYBUCKET2"}, 
+    {MFASFSampleExtension_SampleDuration, L"MFASFSampleExtension_SampleDuration"}, 
+    {MFASFSampleExtension_OutputCleanPoint, L"MFASFSampleExtension_OutputCleanPoint"}, 
+    {MFASFSampleExtension_SMPTE, L"MFASFSampleExtension_SMPTE"}, 
+    {MFASFSampleExtension_FileName, L"MFASFSampleExtension_FileName"}, 
+    {MFASFSampleExtension_ContentType, L"MFASFSampleExtension_ContentType"}, 
+    {MFASFSampleExtension_PixelAspectRatio, L"MFASFSampleExtension_PixelAspectRatio"}, 
+    {MFASFSampleExtension_Encryption_SampleID, L"MFASFSampleExtension_Encryption_SampleID"}, 
+    {MFASFSampleExtension_Encryption_KeyID, L"MFASFSampleExtension_Encryption_KeyID"}, 
+    {MFASFMutexType_Language, L"MFASFMutexType_Language"}, 
+    {MFASFMutexType_Bitrate, L"MFASFMutexType_Bitrate"}, 
+    {MFASFMutexType_Presentation, L"MFASFMutexType_Presentation"}, 
+    {MFASFMutexType_Unknown, L"MFASFMutexType_Unknown"}, 
+
+// From wmsdkidl.h
+    {WMMEDIASUBTYPE_Base, L"WMMEDIASUBTYPE_Base"}, 
+    {WMMEDIATYPE_Video, L"WMMEDIATYPE_Video"}, 
+    {WMMEDIASUBTYPE_RGB1, L"WMMEDIASUBTYPE_RGB1"}, 
+    {WMMEDIASUBTYPE_RGB4, L"WMMEDIASUBTYPE_RGB4"}, 
+    {WMMEDIASUBTYPE_RGB8, L"WMMEDIASUBTYPE_RGB8"}, 
+    {WMMEDIASUBTYPE_RGB565, L"WMMEDIASUBTYPE_RGB565"}, 
+    {WMMEDIASUBTYPE_RGB555, L"WMMEDIASUBTYPE_RGB555"}, 
+    {WMMEDIASUBTYPE_RGB24, L"WMMEDIASUBTYPE_RGB24"}, 
+    {WMMEDIASUBTYPE_RGB32, L"WMMEDIASUBTYPE_RGB32"}, 
+    {WMMEDIASUBTYPE_I420, L"WMMEDIASUBTYPE_I420"}, 
+    {WMMEDIASUBTYPE_IYUV, L"WMMEDIASUBTYPE_IYUV"}, 
+    {WMMEDIASUBTYPE_YV12, L"WMMEDIASUBTYPE_YV12"}, 
+    {WMMEDIASUBTYPE_YUY2, L"WMMEDIASUBTYPE_YUY2"}, 
+    {WMMEDIASUBTYPE_P422, L"WMMEDIASUBTYPE_P422"}, 
+    {WMMEDIASUBTYPE_UYVY, L"WMMEDIASUBTYPE_UYVY"}, 
+    {WMMEDIASUBTYPE_YVYU, L"WMMEDIASUBTYPE_YVYU"}, 
+    {WMMEDIASUBTYPE_YVU9, L"WMMEDIASUBTYPE_YVU9"}, 
+    {WMMEDIASUBTYPE_VIDEOIMAGE, L"WMMEDIASUBTYPE_VIDEOIMAGE"},  
+    {WMMEDIASUBTYPE_MP43, L"WMMEDIASUBTYPE_MP43"}, 
+    {WMMEDIASUBTYPE_MP4S, L"WMMEDIASUBTYPE_MP4S"}, 
+    {WMMEDIASUBTYPE_M4S2, L"WMMEDIASUBTYPE_M4S2"}, 
+    {WMMEDIASUBTYPE_WMV1, L"WMMEDIASUBTYPE_WMV1"}, 
+    {WMMEDIASUBTYPE_WMV2, L"WMMEDIASUBTYPE_WMV2"}, 
+    {WMMEDIASUBTYPE_MSS1, L"WMMEDIASUBTYPE_MSS1"}, 
+    {WMMEDIASUBTYPE_MPEG2_VIDEO, L"WMMEDIASUBTYPE_MPEG2_VIDEO"}, 
+    {WMMEDIATYPE_Audio, L"WMMEDIATYPE_Audio"}, 
+    {WMMEDIASUBTYPE_PCM, L"WMMEDIASUBTYPE_PCM"}, 
+    {WMMEDIASUBTYPE_DRM, L"WMMEDIASUBTYPE_DRM"}, 
+    {WMMEDIASUBTYPE_WMAudioV9, L"WMMEDIASUBTYPE_WMAudioV9"}, 
+    {WMMEDIASUBTYPE_WMAudio_Lossless, L"WMMEDIASUBTYPE_WMAudio_Lossless"}, 
+    {WMMEDIASUBTYPE_MSS2, L"WMMEDIASUBTYPE_MSS2"}, 
+    {WMMEDIASUBTYPE_WMSP1, L"WMMEDIASUBTYPE_WMSP1"}, 
+    {WMMEDIASUBTYPE_WMSP2, L"WMMEDIASUBTYPE_WMSP2"}, 
+    {WMMEDIASUBTYPE_WMV3, L"WMMEDIASUBTYPE_WMV3"}, 
+    {WMMEDIASUBTYPE_WMVP, L"WMMEDIASUBTYPE_WMVP"}, 
+    {WMMEDIASUBTYPE_WVP2, L"WMMEDIASUBTYPE_WVP2"}, 
+    {WMMEDIASUBTYPE_WMVA, L"WMMEDIASUBTYPE_WMVA"}, 
+    {WMMEDIASUBTYPE_WVC1, L"WMMEDIASUBTYPE_WVC1"}, 
+    {WMMEDIASUBTYPE_WMAudioV8, L"WMMEDIASUBTYPE_WMAudioV8"}, 
+    {WMMEDIASUBTYPE_WMAudioV7, L"WMMEDIASUBTYPE_WMAudioV7"}, 
+    {WMMEDIASUBTYPE_WMAudioV2, L"WMMEDIASUBTYPE_WMAudioV2"}, 
+    {WMMEDIASUBTYPE_ACELPnet, L"WMMEDIASUBTYPE_ACELPnet"}, 
+    {WMMEDIASUBTYPE_MP3, L"WMMEDIASUBTYPE_MP3"}, 
+    {WMMEDIASUBTYPE_WebStream, L"WMMEDIASUBTYPE_WebStream"}, 
+    {WMMEDIATYPE_Script, L"WMMEDIATYPE_Script"}, 
+    {WMMEDIATYPE_Image, L"WMMEDIATYPE_Image"}, 
+    {WMMEDIATYPE_FileTransfer, L"WMMEDIATYPE_FileTransfer"}, 
+    {WMMEDIATYPE_Text, L"WMMEDIATYPE_Text"}, 
+    {WMFORMAT_VideoInfo, L"WMFORMAT_VideoInfo"}, 
+    {WMFORMAT_MPEG2Video, L"WMFORMAT_MPEG2Video"}, 
+    {WMFORMAT_WaveFormatEx, L"WMFORMAT_WaveFormatEx"}, 
+    {WMFORMAT_Script, L"WMFORMAT_Script"}, 
+    {WMFORMAT_WebStream, L"WMFORMAT_WebStream"}, 
+    {WMSCRIPTTYPE_TwoStrings, L"WMSCRIPTTYPE_TwoStrings"}, 
+    {WM_SampleExtensionGUID_OutputCleanPoint, L"WM_SampleExtensionGUID_OutputCleanPoint"}, 
+    {WM_SampleExtensionGUID_Timecode, L"WM_SampleExtensionGUID_Timecode"}, 
+    {WM_SampleExtensionGUID_ChromaLocation, L"WM_SampleExtensionGUID_ChromaLocation"}, 
+    {WM_SampleExtensionGUID_ColorSpaceInfo, L"WM_SampleExtensionGUID_ColorSpaceInfo"}, 
+    {WM_SampleExtensionGUID_UserDataInfo, L"WM_SampleExtensionGUID_UserDataInfo"}, 
+    {WM_SampleExtensionGUID_FileName, L"WM_SampleExtensionGUID_FileName"}, 
+    {WM_SampleExtensionGUID_ContentType, L"WM_SampleExtensionGUID_ContentType"}, 
+    {WM_SampleExtensionGUID_PixelAspectRatio, L"WM_SampleExtensionGUID_PixelAspectRatio"}, 
+    {WM_SampleExtensionGUID_SampleDuration, L"WM_SampleExtensionGUID_SampleDuration"}, 
+    {WM_SampleExtensionGUID_SampleProtectionSalt, L"WM_SampleExtensionGUID_SampleProtectionSalt"}, 
+
+// From encdec.h
+    {SID_DRMSecureServiceChannel, L"SID_DRMSecureServiceChannel"}, 
+    {CLSID_ETFilterEncProperties, L"CLSID_ETFilterEncProperties"}, 
+    {CLSID_ETFilterTagProperties, L"CLSID_ETFilterTagProperties"}, 
+    {CLSID_PTFilter, L"CLSID_PTFilter"}, 
+    {CLSID_DTFilterEncProperties, L"CLSID_DTFilterEncProperties"}, 
+    {CLSID_DTFilterTagProperties, L"CLSID_DTFilterTagProperties"}, 
+    {CLSID_XDSCodecProperties, L"CLSID_XDSCodecProperties"}, 
+    {CLSID_XDSCodecTagProperties, L"CLSID_XDSCodecTagProperties"}, 
+    {CLSID_CPCAFiltersCategory, L"CLSID_CPCAFiltersCategory"}, 
+    {EVENTID_XDSCodecNewXDSRating, L"EVENTID_XDSCodecNewXDSRating"}, 
+    {EVENTID_XDSCodecDuplicateXDSRating, L"EVENTID_XDSCodecDuplicateXDSRating"}, 
+    {EVENTID_XDSCodecNewXDSPacket, L"EVENTID_XDSCodecNewXDSPacket"}, 
+    {EVENTID_DTFilterRatingChange, L"EVENTID_DTFilterRatingChange"}, 
+    {EVENTID_DTFilterRatingsBlock, L"EVENTID_DTFilterRatingsBlock"}, 
+    {EVENTID_DTFilterRatingsUnblock, L"EVENTID_DTFilterRatingsUnblock"}, 
+    {EVENTID_DTFilterXDSPacket, L"EVENTID_DTFilterXDSPacket"}, 
+    {EVENTID_ETFilterEncryptionOn, L"EVENTID_ETFilterEncryptionOn"}, 
+    {EVENTID_ETFilterEncryptionOff, L"EVENTID_ETFilterEncryptionOff"}, 
+    {EVENTID_DTFilterCOPPUnblock, L"EVENTID_DTFilterCOPPUnblock"}, 
+    {EVENTID_EncDecFilterError, L"EVENTID_EncDecFilterError"}, 
+    {EVENTID_DTFilterCOPPBlock, L"EVENTID_DTFilterCOPPBlock"}, 
+    {EVENTID_ETFilterCopyOnce, L"EVENTID_ETFilterCopyOnce"}, 
+    {EVENTID_ETFilterCopyNever, L"EVENTID_ETFilterCopyNever"}, 
+    {EVENTID_DTFilterDataFormatOK, L"EVENTID_DTFilterDataFormatOK"}, 
+    {EVENTID_DTFilterDataFormatFailure, L"EVENTID_DTFilterDataFormatFailure"}, 
+    {EVENTID_ETDTFilterLicenseOK, L"EVENTID_ETDTFilterLicenseOK"}, 
+    {EVENTID_ETDTFilterLicenseFailure, L"EVENTID_ETDTFilterLicenseFailure"}, 
+    {MEDIASUBTYPE_ETDTFilter_Tagged, L"MEDIASUBTYPE_ETDTFilter_Tagged"}, 
+    {FORMATTYPE_ETDTFilter_Tagged, L"FORMATTYPE_ETDTFilter_Tagged"}, 
+    {MEDIASUBTYPE_CPFilters_Processed, L"MEDIASUBTYPE_CPFilters_Processed"}, 
+    {FORMATTYPE_CPFilters_Processed, L"FORMATTYPE_CPFilters_Processed"}, 
+    {EVENTID_EncDecFilterEvent, L"EVENTID_EncDecFilterEvent"}, 
+    {EVENTID_FormatNotSupportedEvent, L"EVENTID_FormatNotSupportedEvent"}, 
+    {EVENTID_DemultiplexerFilterDiscontinuity, L"EVENTID_DemultiplexerFilterDiscontinuity"}, 
+    {DSATTRIB_WMDRMProtectionInfo, L"DSATTRIB_WMDRMProtectionInfo"}, 
+    {DSATTRIB_BadSampleInfo, L"DSATTRIB_BadSampleInfo"}, 
+  };
+
+static DWORD g_SizeOfKnownGUIDs = ARRAYSIZE(g_KnownGUIDs);
+
+static struct tag_Known_PKeys
+{
+    PROPERTYKEY propKey;
+    LPWSTR pwszPropKey;
+} g_Known_PKeys[] = 
+{
+// From propkey.h        
+    {PKEY_Audio_ChannelCount, L"PKEY_Audio_ChannelCount"}, 
+    {PKEY_Audio_Compression, L"PKEY_Audio_Compression"}, 
+    {PKEY_Audio_EncodingBitrate, L"PKEY_Audio_EncodingBitrate"}, 
+    {PKEY_Audio_Format, L"PKEY_Audio_Format"}, 
+    {PKEY_Audio_IsVariableBitRate, L"PKEY_Audio_IsVariableBitRate"}, 
+    {PKEY_Audio_PeakValue, L"PKEY_Audio_PeakValue"}, 
+    {PKEY_Audio_SampleRate, L"PKEY_Audio_SampleRate"}, 
+    {PKEY_Audio_SampleSize, L"PKEY_Audio_SampleSize"}, 
+    {PKEY_Audio_StreamName, L"PKEY_Audio_StreamName"}, 
+    {PKEY_Audio_StreamNumber, L"PKEY_Audio_StreamNumber"}, 
+    {PKEY_Calendar_Duration, L"PKEY_Calendar_Duration"}, 
+    {PKEY_Calendar_IsOnline, L"PKEY_Calendar_IsOnline"}, 
+    {PKEY_Calendar_IsRecurring, L"PKEY_Calendar_IsRecurring"}, 
+    {PKEY_Calendar_Location, L"PKEY_Calendar_Location"}, 
+    {PKEY_Calendar_OptionalAttendeeAddresses, L"PKEY_Calendar_OptionalAttendeeAddresses"}, 
+    {PKEY_Calendar_OptionalAttendeeNames, L"PKEY_Calendar_OptionalAttendeeNames"}, 
+    {PKEY_Calendar_OrganizerAddress, L"PKEY_Calendar_OrganizerAddress"}, 
+    {PKEY_Calendar_OrganizerName, L"PKEY_Calendar_OrganizerName"}, 
+    {PKEY_Calendar_ReminderTime, L"PKEY_Calendar_ReminderTime"}, 
+    {PKEY_Calendar_RequiredAttendeeAddresses, L"PKEY_Calendar_RequiredAttendeeAddresses"}, 
+    {PKEY_Calendar_RequiredAttendeeNames, L"PKEY_Calendar_RequiredAttendeeNames"}, 
+    {PKEY_Calendar_Resources, L"PKEY_Calendar_Resources"}, 
+    {PKEY_Calendar_ResponseStatus, L"PKEY_Calendar_ResponseStatus"}, 
+    {PKEY_Calendar_ShowTimeAs, L"PKEY_Calendar_ShowTimeAs"}, 
+    {PKEY_Calendar_ShowTimeAsText, L"PKEY_Calendar_ShowTimeAsText"}, 
+    {PKEY_Communication_AccountName, L"PKEY_Communication_AccountName"}, 
+    {PKEY_Communication_DateItemExpires, L"PKEY_Communication_DateItemExpires"}, 
+    {PKEY_Communication_FollowupIconIndex, L"PKEY_Communication_FollowupIconIndex"}, 
+    {PKEY_Communication_HeaderItem, L"PKEY_Communication_HeaderItem"}, 
+    {PKEY_Communication_PolicyTag, L"PKEY_Communication_PolicyTag"}, 
+    {PKEY_Communication_SecurityFlags, L"PKEY_Communication_SecurityFlags"}, 
+    {PKEY_Communication_Suffix, L"PKEY_Communication_Suffix"}, 
+    {PKEY_Communication_TaskStatus, L"PKEY_Communication_TaskStatus"}, 
+    {PKEY_Communication_TaskStatusText, L"PKEY_Communication_TaskStatusText"}, 
+    {PKEY_Computer_DecoratedFreeSpace, L"PKEY_Computer_DecoratedFreeSpace"}, 
+    {PKEY_Contact_Anniversary, L"PKEY_Contact_Anniversary"}, 
+    {PKEY_Contact_AssistantName, L"PKEY_Contact_AssistantName"}, 
+    {PKEY_Contact_AssistantTelephone, L"PKEY_Contact_AssistantTelephone"}, 
+    {PKEY_Contact_Birthday, L"PKEY_Contact_Birthday"}, 
+    {PKEY_Contact_BusinessAddress, L"PKEY_Contact_BusinessAddress"}, 
+    {PKEY_Contact_BusinessAddressCity, L"PKEY_Contact_BusinessAddressCity"}, 
+    {PKEY_Contact_BusinessAddressCountry, L"PKEY_Contact_BusinessAddressCountry"}, 
+    {PKEY_Contact_BusinessAddressPostalCode, L"PKEY_Contact_BusinessAddressPostalCode"}, 
+    {PKEY_Contact_BusinessAddressPostOfficeBox, L"PKEY_Contact_BusinessAddressPostOfficeBox"}, 
+    {PKEY_Contact_BusinessAddressState, L"PKEY_Contact_BusinessAddressState"}, 
+    {PKEY_Contact_BusinessAddressStreet, L"PKEY_Contact_BusinessAddressStreet"}, 
+    {PKEY_Contact_BusinessFaxNumber, L"PKEY_Contact_BusinessFaxNumber"}, 
+    {PKEY_Contact_BusinessHomePage, L"PKEY_Contact_BusinessHomePage"}, 
+    {PKEY_Contact_BusinessTelephone, L"PKEY_Contact_BusinessTelephone"}, 
+    {PKEY_Contact_CallbackTelephone, L"PKEY_Contact_CallbackTelephone"}, 
+    {PKEY_Contact_CarTelephone, L"PKEY_Contact_CarTelephone"}, 
+    {PKEY_Contact_Children, L"PKEY_Contact_Children"}, 
+    {PKEY_Contact_CompanyMainTelephone, L"PKEY_Contact_CompanyMainTelephone"}, 
+    {PKEY_Contact_Department, L"PKEY_Contact_Department"}, 
+    {PKEY_Contact_EmailAddress, L"PKEY_Contact_EmailAddress"}, 
+    {PKEY_Contact_EmailAddress2, L"PKEY_Contact_EmailAddress2"}, 
+    {PKEY_Contact_EmailAddress3, L"PKEY_Contact_EmailAddress3"}, 
+    {PKEY_Contact_EmailAddresses, L"PKEY_Contact_EmailAddresses"}, 
+    {PKEY_Contact_EmailName, L"PKEY_Contact_EmailName"}, 
+    {PKEY_Contact_FileAsName, L"PKEY_Contact_FileAsName"}, 
+    {PKEY_Contact_FirstName, L"PKEY_Contact_FirstName"}, 
+    {PKEY_Contact_FullName, L"PKEY_Contact_FullName"}, 
+    {PKEY_Contact_Gender, L"PKEY_Contact_Gender"}, 
+    {PKEY_Contact_GenderValue, L"PKEY_Contact_GenderValue"}, 
+    {PKEY_Contact_Hobbies, L"PKEY_Contact_Hobbies"}, 
+    {PKEY_Contact_HomeAddress, L"PKEY_Contact_HomeAddress"}, 
+    {PKEY_Contact_HomeAddressCity, L"PKEY_Contact_HomeAddressCity"}, 
+    {PKEY_Contact_HomeAddressCountry, L"PKEY_Contact_HomeAddressCountry"}, 
+    {PKEY_Contact_HomeAddressPostalCode, L"PKEY_Contact_HomeAddressPostalCode"}, 
+    {PKEY_Contact_HomeAddressPostOfficeBox, L"PKEY_Contact_HomeAddressPostOfficeBox"}, 
+    {PKEY_Contact_HomeAddressState, L"PKEY_Contact_HomeAddressState"}, 
+    {PKEY_Contact_HomeAddressStreet, L"PKEY_Contact_HomeAddressStreet"}, 
+    {PKEY_Contact_HomeFaxNumber, L"PKEY_Contact_HomeFaxNumber"}, 
+    {PKEY_Contact_HomeTelephone, L"PKEY_Contact_HomeTelephone"}, 
+    {PKEY_Contact_IMAddress, L"PKEY_Contact_IMAddress"}, 
+    {PKEY_Contact_Initials, L"PKEY_Contact_Initials"}, 
+    {PKEY_Contact_JA_CompanyNamePhonetic, L"PKEY_Contact_JA_CompanyNamePhonetic"}, 
+    {PKEY_Contact_JA_FirstNamePhonetic, L"PKEY_Contact_JA_FirstNamePhonetic"}, 
+    {PKEY_Contact_JA_LastNamePhonetic, L"PKEY_Contact_JA_LastNamePhonetic"}, 
+    {PKEY_Contact_JobTitle, L"PKEY_Contact_JobTitle"}, 
+    {PKEY_Contact_Label, L"PKEY_Contact_Label"}, 
+    {PKEY_Contact_LastName, L"PKEY_Contact_LastName"}, 
+    {PKEY_Contact_MailingAddress, L"PKEY_Contact_MailingAddress"}, 
+    {PKEY_Contact_MiddleName, L"PKEY_Contact_MiddleName"}, 
+    {PKEY_Contact_MobileTelephone, L"PKEY_Contact_MobileTelephone"}, 
+    {PKEY_Contact_NickName, L"PKEY_Contact_NickName"}, 
+    {PKEY_Contact_OfficeLocation, L"PKEY_Contact_OfficeLocation"}, 
+    {PKEY_Contact_OtherAddress, L"PKEY_Contact_OtherAddress"}, 
+    {PKEY_Contact_OtherAddressCity, L"PKEY_Contact_OtherAddressCity"}, 
+    {PKEY_Contact_OtherAddressCountry, L"PKEY_Contact_OtherAddressCountry"}, 
+    {PKEY_Contact_OtherAddressPostalCode, L"PKEY_Contact_OtherAddressPostalCode"}, 
+    {PKEY_Contact_OtherAddressPostOfficeBox, L"PKEY_Contact_OtherAddressPostOfficeBox"}, 
+    {PKEY_Contact_OtherAddressState, L"PKEY_Contact_OtherAddressState"}, 
+    {PKEY_Contact_OtherAddressStreet, L"PKEY_Contact_OtherAddressStreet"}, 
+    {PKEY_Contact_PagerTelephone, L"PKEY_Contact_PagerTelephone"}, 
+    {PKEY_Contact_PersonalTitle, L"PKEY_Contact_PersonalTitle"}, 
+    {PKEY_Contact_PrimaryAddressCity, L"PKEY_Contact_PrimaryAddressCity"}, 
+    {PKEY_Contact_PrimaryAddressCountry, L"PKEY_Contact_PrimaryAddressCountry"}, 
+    {PKEY_Contact_PrimaryAddressPostalCode, L"PKEY_Contact_PrimaryAddressPostalCode"}, 
+    {PKEY_Contact_PrimaryAddressPostOfficeBox, L"PKEY_Contact_PrimaryAddressPostOfficeBox"}, 
+    {PKEY_Contact_PrimaryAddressState, L"PKEY_Contact_PrimaryAddressState"}, 
+    {PKEY_Contact_PrimaryAddressStreet, L"PKEY_Contact_PrimaryAddressStreet"}, 
+    {PKEY_Contact_PrimaryEmailAddress, L"PKEY_Contact_PrimaryEmailAddress"}, 
+    {PKEY_Contact_PrimaryTelephone, L"PKEY_Contact_PrimaryTelephone"}, 
+    {PKEY_Contact_Profession, L"PKEY_Contact_Profession"}, 
+    {PKEY_Contact_SpouseName, L"PKEY_Contact_SpouseName"}, 
+    {PKEY_Contact_Suffix, L"PKEY_Contact_Suffix"}, 
+    {PKEY_Contact_TelexNumber, L"PKEY_Contact_TelexNumber"}, 
+    {PKEY_Contact_TTYTDDTelephone, L"PKEY_Contact_TTYTDDTelephone"}, 
+    {PKEY_Contact_WebPage, L"PKEY_Contact_WebPage"}, 
+    {PKEY_AcquisitionID, L"PKEY_AcquisitionID"}, 
+    {PKEY_ApplicationName, L"PKEY_ApplicationName"}, 
+    {PKEY_Author, L"PKEY_Author"}, 
+    {PKEY_Capacity, L"PKEY_Capacity"}, 
+    {PKEY_Category, L"PKEY_Category"}, 
+    {PKEY_Comment, L"PKEY_Comment"}, 
+    {PKEY_Company, L"PKEY_Company"}, 
+    {PKEY_ComputerName, L"PKEY_ComputerName"}, 
+    {PKEY_ContainedItems, L"PKEY_ContainedItems"}, 
+    {PKEY_ContentStatus, L"PKEY_ContentStatus"}, 
+    {PKEY_ContentType, L"PKEY_ContentType"}, 
+    {PKEY_Copyright, L"PKEY_Copyright"}, 
+    {PKEY_DateAccessed, L"PKEY_DateAccessed"}, 
+    {PKEY_DateAcquired, L"PKEY_DateAcquired"}, 
+    {PKEY_DateArchived, L"PKEY_DateArchived"}, 
+    {PKEY_DateCompleted, L"PKEY_DateCompleted"}, 
+    {PKEY_DateCreated, L"PKEY_DateCreated"}, 
+    {PKEY_DateImported, L"PKEY_DateImported"}, 
+    {PKEY_DateModified, L"PKEY_DateModified"}, 
+    {PKEY_DueDate, L"PKEY_DueDate"}, 
+    {PKEY_EndDate, L"PKEY_EndDate"}, 
+    {PKEY_FileAllocationSize, L"PKEY_FileAllocationSize"}, 
+    {PKEY_FileAttributes, L"PKEY_FileAttributes"}, 
+    {PKEY_FileCount, L"PKEY_FileCount"}, 
+    {PKEY_FileDescription, L"PKEY_FileDescription"}, 
+    {PKEY_FileExtension, L"PKEY_FileExtension"}, 
+    {PKEY_FileFRN, L"PKEY_FileFRN"}, 
+    {PKEY_FileName, L"PKEY_FileName"}, 
+    {PKEY_FileOwner, L"PKEY_FileOwner"}, 
+    {PKEY_FileVersion, L"PKEY_FileVersion"}, 
+    {PKEY_FindData, L"PKEY_FindData"}, 
+    {PKEY_FlagColor, L"PKEY_FlagColor"}, 
+    {PKEY_FlagColorText, L"PKEY_FlagColorText"}, 
+    {PKEY_FlagStatus, L"PKEY_FlagStatus"}, 
+    {PKEY_FlagStatusText, L"PKEY_FlagStatusText"}, 
+    {PKEY_FreeSpace, L"PKEY_FreeSpace"}, 
+    {PKEY_FullText, L"PKEY_FullText"}, 
+    {PKEY_Identity, L"PKEY_Identity"}, 
+    {PKEY_Identity_Blob, L"PKEY_Identity_Blob"}, 
+    {PKEY_Identity_DisplayName, L"PKEY_Identity_DisplayName"}, 
+    {PKEY_Identity_IsMeIdentity, L"PKEY_Identity_IsMeIdentity"}, 
+    {PKEY_Identity_PrimaryEmailAddress, L"PKEY_Identity_PrimaryEmailAddress"}, 
+    {PKEY_Identity_ProviderID, L"PKEY_Identity_ProviderID"}, 
+    {PKEY_Identity_UniqueID, L"PKEY_Identity_UniqueID"}, 
+    {PKEY_Identity_UserName, L"PKEY_Identity_UserName"}, 
+    {PKEY_IdentityProvider_Name, L"PKEY_IdentityProvider_Name"}, 
+    {PKEY_IdentityProvider_Picture, L"PKEY_IdentityProvider_Picture"}, 
+    {PKEY_ImageParsingName, L"PKEY_ImageParsingName"}, 
+    {PKEY_Importance, L"PKEY_Importance"}, 
+    {PKEY_ImportanceText, L"PKEY_ImportanceText"}, 
+    {PKEY_IsAttachment, L"PKEY_IsAttachment"}, 
+    {PKEY_IsDefaultNonOwnerSaveLocation, L"PKEY_IsDefaultNonOwnerSaveLocation"}, 
+    {PKEY_IsDefaultSaveLocation, L"PKEY_IsDefaultSaveLocation"}, 
+    {PKEY_IsDeleted, L"PKEY_IsDeleted"}, 
+    {PKEY_IsEncrypted, L"PKEY_IsEncrypted"}, 
+    {PKEY_IsFlagged, L"PKEY_IsFlagged"}, 
+    {PKEY_IsFlaggedComplete, L"PKEY_IsFlaggedComplete"}, 
+    {PKEY_IsIncomplete, L"PKEY_IsIncomplete"}, 
+    {PKEY_IsLocationSupported, L"PKEY_IsLocationSupported"}, 
+    {PKEY_IsPinnedToNameSpaceTree, L"PKEY_IsPinnedToNameSpaceTree"}, 
+    {PKEY_IsRead, L"PKEY_IsRead"}, 
+    {PKEY_IsSearchOnlyItem, L"PKEY_IsSearchOnlyItem"}, 
+    {PKEY_IsSendToTarget, L"PKEY_IsSendToTarget"}, 
+    {PKEY_IsShared, L"PKEY_IsShared"}, 
+    {PKEY_ItemAuthors, L"PKEY_ItemAuthors"}, 
+    {PKEY_ItemClassType, L"PKEY_ItemClassType"}, 
+    {PKEY_ItemDate, L"PKEY_ItemDate"}, 
+    {PKEY_ItemFolderNameDisplay, L"PKEY_ItemFolderNameDisplay"}, 
+    {PKEY_ItemFolderPathDisplay, L"PKEY_ItemFolderPathDisplay"}, 
+    {PKEY_ItemFolderPathDisplayNarrow, L"PKEY_ItemFolderPathDisplayNarrow"}, 
+    {PKEY_ItemName, L"PKEY_ItemName"}, 
+    {PKEY_ItemNameDisplay, L"PKEY_ItemNameDisplay"}, 
+    {PKEY_ItemNamePrefix, L"PKEY_ItemNamePrefix"}, 
+    {PKEY_ItemParticipants, L"PKEY_ItemParticipants"}, 
+    {PKEY_ItemPathDisplay, L"PKEY_ItemPathDisplay"}, 
+    {PKEY_ItemPathDisplayNarrow, L"PKEY_ItemPathDisplayNarrow"}, 
+    {PKEY_ItemType, L"PKEY_ItemType"}, 
+    {PKEY_ItemTypeText, L"PKEY_ItemTypeText"}, 
+    {PKEY_ItemUrl, L"PKEY_ItemUrl"}, 
+    {PKEY_Keywords, L"PKEY_Keywords"}, 
+    {PKEY_Kind, L"PKEY_Kind"}, 
+    {PKEY_KindText, L"PKEY_KindText"}, 
+    {PKEY_Language, L"PKEY_Language"}, 
+    {PKEY_MileageInformation, L"PKEY_MileageInformation"}, 
+    {PKEY_MIMEType, L"PKEY_MIMEType"}, 
+    {PKEY_Null, L"PKEY_Null"}, 
+    {PKEY_OfflineAvailability, L"PKEY_OfflineAvailability"}, 
+    {PKEY_OfflineStatus, L"PKEY_OfflineStatus"}, 
+    {PKEY_OriginalFileName, L"PKEY_OriginalFileName"}, 
+    {PKEY_OwnerSID, L"PKEY_OwnerSID"}, 
+    {PKEY_ParentalRating, L"PKEY_ParentalRating"}, 
+    {PKEY_ParentalRatingReason, L"PKEY_ParentalRatingReason"}, 
+    {PKEY_ParentalRatingsOrganization, L"PKEY_ParentalRatingsOrganization"}, 
+    {PKEY_ParsingBindContext, L"PKEY_ParsingBindContext"}, 
+    {PKEY_ParsingName, L"PKEY_ParsingName"}, 
+    {PKEY_ParsingPath, L"PKEY_ParsingPath"}, 
+    {PKEY_PerceivedType, L"PKEY_PerceivedType"}, 
+    {PKEY_PercentFull, L"PKEY_PercentFull"}, 
+    {PKEY_Priority, L"PKEY_Priority"}, 
+    {PKEY_PriorityText, L"PKEY_PriorityText"}, 
+    {PKEY_Project, L"PKEY_Project"}, 
+    {PKEY_ProviderItemID, L"PKEY_ProviderItemID"}, 
+    {PKEY_Rating, L"PKEY_Rating"}, 
+    {PKEY_RatingText, L"PKEY_RatingText"}, 
+    {PKEY_Sensitivity, L"PKEY_Sensitivity"}, 
+    {PKEY_SensitivityText, L"PKEY_SensitivityText"}, 
+    {PKEY_SFGAOFlags, L"PKEY_SFGAOFlags"}, 
+    {PKEY_SharedWith, L"PKEY_SharedWith"}, 
+    {PKEY_ShareUserRating, L"PKEY_ShareUserRating"}, 
+    {PKEY_SharingStatus, L"PKEY_SharingStatus"}, 
+    {PKEY_Shell_OmitFromView, L"PKEY_Shell_OmitFromView"}, 
+    {PKEY_SimpleRating, L"PKEY_SimpleRating"}, 
+    {PKEY_Size, L"PKEY_Size"}, 
+    {PKEY_SoftwareUsed, L"PKEY_SoftwareUsed"}, 
+    {PKEY_SourceItem, L"PKEY_SourceItem"}, 
+    {PKEY_StartDate, L"PKEY_StartDate"}, 
+    {PKEY_Status, L"PKEY_Status"}, 
+    {PKEY_Subject, L"PKEY_Subject"}, 
+    {PKEY_Thumbnail, L"PKEY_Thumbnail"}, 
+    {PKEY_ThumbnailCacheId, L"PKEY_ThumbnailCacheId"}, 
+    {PKEY_ThumbnailStream, L"PKEY_ThumbnailStream"}, 
+    {PKEY_Title, L"PKEY_Title"}, 
+    {PKEY_TotalFileSize, L"PKEY_TotalFileSize"}, 
+    {PKEY_Trademarks, L"PKEY_Trademarks"}, 
+    {PKEY_Device_PrinterURL, L"PKEY_Device_PrinterURL"}, 
+    {PKEY_DeviceInterface_PrinterDriverDirectory, L"PKEY_DeviceInterface_PrinterDriverDirectory"}, 
+    {PKEY_DeviceInterface_PrinterDriverName, L"PKEY_DeviceInterface_PrinterDriverName"}, 
+    {PKEY_DeviceInterface_PrinterName, L"PKEY_DeviceInterface_PrinterName"}, 
+    {PKEY_DeviceInterface_PrinterPortName, L"PKEY_DeviceInterface_PrinterPortName"}, 
+    {PKEY_Devices_BatteryLife, L"PKEY_Devices_BatteryLife"}, 
+    {PKEY_Devices_BatteryPlusCharging, L"PKEY_Devices_BatteryPlusCharging"}, 
+    {PKEY_Devices_BatteryPlusChargingText, L"PKEY_Devices_BatteryPlusChargingText"}, 
+    {PKEY_Devices_Category_Desc_Singular, L"PKEY_Devices_Category_Desc_Singular"}, 
+    {PKEY_Devices_CategoryGroup_Desc, L"PKEY_Devices_CategoryGroup_Desc"}, 
+    {PKEY_Devices_Category_Desc_Plural, L"PKEY_Devices_Category_Desc_Plural"}, 
+    {PKEY_Devices_ChargingState, L"PKEY_Devices_ChargingState"}, 
+    {PKEY_Devices_IsConnected, L"PKEY_Devices_IsConnected"}, 
+    {PKEY_Devices_ContainerId, L"PKEY_Devices_ContainerId"}, 
+    {PKEY_Devices_DefaultTooltip, L"PKEY_Devices_DefaultTooltip"}, 
+    {PKEY_Devices_DeviceDescription1, L"PKEY_Devices_DeviceDescription1"}, 
+    {PKEY_Devices_DeviceDescription2, L"PKEY_Devices_DeviceDescription2"}, 
+    {PKEY_Devices_DiscoveryMethod, L"PKEY_Devices_DiscoveryMethod"}, 
+    {PKEY_Devices_FriendlyName, L"PKEY_Devices_FriendlyName"}, 
+    {PKEY_Devices_FunctionPaths, L"PKEY_Devices_FunctionPaths"}, 
+    {PKEY_Devices_InterfacePaths, L"PKEY_Devices_InterfacePaths"}, 
+    {PKEY_Devices_IsDefaultDevice, L"PKEY_Devices_IsDefaultDevice"}, 
+    {PKEY_Devices_IsNetworkDevice, L"PKEY_Devices_IsNetworkDevice"}, 
+    {PKEY_Devices_IsSharedDevice, L"PKEY_Devices_IsSharedDevice"}, 
+    {PKEY_Devices_IsSoftwareInstalling, L"PKEY_Devices_IsSoftwareInstalling"}, 
+    {PKEY_Devices_LaunchDeviceStageFromExplorer, L"PKEY_Devices_LaunchDeviceStageFromExplorer"}, 
+    {PKEY_Devices_IsLocalMachine, L"PKEY_Devices_IsLocalMachine"}, 
+    {PKEY_Devices_Manufacturer, L"PKEY_Devices_Manufacturer"}, 
+    {PKEY_Devices_MissedCalls, L"PKEY_Devices_MissedCalls"}, 
+    {PKEY_Devices_ModelName, L"PKEY_Devices_ModelName"}, 
+    {PKEY_Devices_ModelNumber, L"PKEY_Devices_ModelNumber"}, 
+    {PKEY_Devices_NetworkedTooltip, L"PKEY_Devices_NetworkedTooltip"}, 
+    {PKEY_Devices_NetworkName, L"PKEY_Devices_NetworkName"}, 
+    {PKEY_Devices_NetworkType, L"PKEY_Devices_NetworkType"}, 
+    {PKEY_Devices_NewPictures, L"PKEY_Devices_NewPictures"}, 
+    {PKEY_Devices_Notification, L"PKEY_Devices_Notification"}, 
+    {PKEY_Devices_Notification_LowBattery, L"PKEY_Devices_Notification_LowBattery"}, 
+    {PKEY_Devices_Notification_MissedCall, L"PKEY_Devices_Notification_MissedCall"}, 
+    {PKEY_Devices_Notification_NewMessage, L"PKEY_Devices_Notification_NewMessage"}, 
+    {PKEY_Devices_Notification_NewVoicemail, L"PKEY_Devices_Notification_NewVoicemail"}, 
+    {PKEY_Devices_Notification_StorageFull, L"PKEY_Devices_Notification_StorageFull"}, 
+    {PKEY_Devices_Notification_StorageFullLinkText, L"PKEY_Devices_Notification_StorageFullLinkText"}, 
+    {PKEY_Devices_NotificationStore, L"PKEY_Devices_NotificationStore"}, 
+    {PKEY_Devices_IsNotWorkingProperly, L"PKEY_Devices_IsNotWorkingProperly"}, 
+    {PKEY_Devices_IsPaired, L"PKEY_Devices_IsPaired"}, 
+    {PKEY_Devices_PrimaryCategory, L"PKEY_Devices_PrimaryCategory"}, 
+    {PKEY_Devices_Roaming, L"PKEY_Devices_Roaming"}, 
+    {PKEY_Devices_SafeRemovalRequired, L"PKEY_Devices_SafeRemovalRequired"}, 
+    {PKEY_Devices_SharedTooltip, L"PKEY_Devices_SharedTooltip"}, 
+    {PKEY_Devices_SignalStrength, L"PKEY_Devices_SignalStrength"}, 
+    {PKEY_Devices_Status1, L"PKEY_Devices_Status1"}, 
+    {PKEY_Devices_Status2, L"PKEY_Devices_Status2"}, 
+    {PKEY_Devices_StorageCapacity, L"PKEY_Devices_StorageCapacity"}, 
+    {PKEY_Devices_StorageFreeSpace, L"PKEY_Devices_StorageFreeSpace"}, 
+    {PKEY_Devices_StorageFreeSpacePercent, L"PKEY_Devices_StorageFreeSpacePercent"}, 
+    {PKEY_Devices_TextMessages, L"PKEY_Devices_TextMessages"}, 
+    {PKEY_Devices_Voicemail, L"PKEY_Devices_Voicemail"}, 
+    {PKEY_Document_ByteCount, L"PKEY_Document_ByteCount"}, 
+    {PKEY_Document_CharacterCount, L"PKEY_Document_CharacterCount"}, 
+    {PKEY_Document_ClientID, L"PKEY_Document_ClientID"}, 
+    {PKEY_Document_Contributor, L"PKEY_Document_Contributor"}, 
+    {PKEY_Document_DateCreated, L"PKEY_Document_DateCreated"}, 
+    {PKEY_Document_DatePrinted, L"PKEY_Document_DatePrinted"}, 
+    {PKEY_Document_DateSaved, L"PKEY_Document_DateSaved"}, 
+    {PKEY_Document_Division, L"PKEY_Document_Division"}, 
+    {PKEY_Document_DocumentID, L"PKEY_Document_DocumentID"}, 
+    {PKEY_Document_HiddenSlideCount, L"PKEY_Document_HiddenSlideCount"}, 
+    {PKEY_Document_LastAuthor, L"PKEY_Document_LastAuthor"}, 
+    {PKEY_Document_LineCount, L"PKEY_Document_LineCount"}, 
+    {PKEY_Document_Manager, L"PKEY_Document_Manager"}, 
+    {PKEY_Document_MultimediaClipCount, L"PKEY_Document_MultimediaClipCount"}, 
+    {PKEY_Document_NoteCount, L"PKEY_Document_NoteCount"}, 
+    {PKEY_Document_PageCount, L"PKEY_Document_PageCount"}, 
+    {PKEY_Document_ParagraphCount, L"PKEY_Document_ParagraphCount"}, 
+    {PKEY_Document_PresentationFormat, L"PKEY_Document_PresentationFormat"}, 
+    {PKEY_Document_RevisionNumber, L"PKEY_Document_RevisionNumber"}, 
+    {PKEY_Document_Security, L"PKEY_Document_Security"}, 
+    {PKEY_Document_SlideCount, L"PKEY_Document_SlideCount"}, 
+    {PKEY_Document_Template, L"PKEY_Document_Template"}, 
+    {PKEY_Document_TotalEditingTime, L"PKEY_Document_TotalEditingTime"}, 
+    {PKEY_Document_Version, L"PKEY_Document_Version"}, 
+    {PKEY_Document_WordCount, L"PKEY_Document_WordCount"}, 
+    {PKEY_DRM_DatePlayExpires, L"PKEY_DRM_DatePlayExpires"}, 
+    {PKEY_DRM_DatePlayStarts, L"PKEY_DRM_DatePlayStarts"}, 
+    {PKEY_DRM_Description, L"PKEY_DRM_Description"}, 
+    {PKEY_DRM_IsProtected, L"PKEY_DRM_IsProtected"}, 
+    {PKEY_DRM_PlayCount, L"PKEY_DRM_PlayCount"}, 
+    {PKEY_GPS_Altitude, L"PKEY_GPS_Altitude"}, 
+    {PKEY_GPS_AltitudeDenominator, L"PKEY_GPS_AltitudeDenominator"}, 
+    {PKEY_GPS_AltitudeNumerator, L"PKEY_GPS_AltitudeNumerator"}, 
+    {PKEY_GPS_AltitudeRef, L"PKEY_GPS_AltitudeRef"}, 
+    {PKEY_GPS_AreaInformation, L"PKEY_GPS_AreaInformation"}, 
+    {PKEY_GPS_Date, L"PKEY_GPS_Date"}, 
+    {PKEY_GPS_DestBearing, L"PKEY_GPS_DestBearing"}, 
+    {PKEY_GPS_DestBearingDenominator, L"PKEY_GPS_DestBearingDenominator"}, 
+    {PKEY_GPS_DestBearingNumerator, L"PKEY_GPS_DestBearingNumerator"}, 
+    {PKEY_GPS_DestBearingRef, L"PKEY_GPS_DestBearingRef"}, 
+    {PKEY_GPS_DestDistance, L"PKEY_GPS_DestDistance"}, 
+    {PKEY_GPS_DestDistanceDenominator, L"PKEY_GPS_DestDistanceDenominator"}, 
+    {PKEY_GPS_DestDistanceNumerator, L"PKEY_GPS_DestDistanceNumerator"}, 
+    {PKEY_GPS_DestDistanceRef, L"PKEY_GPS_DestDistanceRef"}, 
+    {PKEY_GPS_DestLatitude, L"PKEY_GPS_DestLatitude"}, 
+    {PKEY_GPS_DestLatitudeDenominator, L"PKEY_GPS_DestLatitudeDenominator"}, 
+    {PKEY_GPS_DestLatitudeNumerator, L"PKEY_GPS_DestLatitudeNumerator"}, 
+    {PKEY_GPS_DestLatitudeRef, L"PKEY_GPS_DestLatitudeRef"}, 
+    {PKEY_GPS_DestLongitude, L"PKEY_GPS_DestLongitude"}, 
+    {PKEY_GPS_DestLongitudeDenominator, L"PKEY_GPS_DestLongitudeDenominator"}, 
+    {PKEY_GPS_DestLongitudeNumerator, L"PKEY_GPS_DestLongitudeNumerator"}, 
+    {PKEY_GPS_DestLongitudeRef, L"PKEY_GPS_DestLongitudeRef"}, 
+    {PKEY_GPS_Differential, L"PKEY_GPS_Differential"}, 
+    {PKEY_GPS_DOP, L"PKEY_GPS_DOP"}, 
+    {PKEY_GPS_DOPDenominator, L"PKEY_GPS_DOPDenominator"}, 
+    {PKEY_GPS_DOPNumerator, L"PKEY_GPS_DOPNumerator"}, 
+    {PKEY_GPS_ImgDirection, L"PKEY_GPS_ImgDirection"}, 
+    {PKEY_GPS_ImgDirectionDenominator, L"PKEY_GPS_ImgDirectionDenominator"}, 
+    {PKEY_GPS_ImgDirectionNumerator, L"PKEY_GPS_ImgDirectionNumerator"}, 
+    {PKEY_GPS_ImgDirectionRef, L"PKEY_GPS_ImgDirectionRef"}, 
+    {PKEY_GPS_Latitude, L"PKEY_GPS_Latitude"}, 
+    {PKEY_GPS_LatitudeDenominator, L"PKEY_GPS_LatitudeDenominator"}, 
+    {PKEY_GPS_LatitudeNumerator, L"PKEY_GPS_LatitudeNumerator"}, 
+    {PKEY_GPS_LatitudeRef, L"PKEY_GPS_LatitudeRef"}, 
+    {PKEY_GPS_Longitude, L"PKEY_GPS_Longitude"}, 
+    {PKEY_GPS_LongitudeDenominator, L"PKEY_GPS_LongitudeDenominator"}, 
+    {PKEY_GPS_LongitudeNumerator, L"PKEY_GPS_LongitudeNumerator"}, 
+    {PKEY_GPS_LongitudeRef, L"PKEY_GPS_LongitudeRef"}, 
+    {PKEY_GPS_MapDatum, L"PKEY_GPS_MapDatum"}, 
+    {PKEY_GPS_MeasureMode, L"PKEY_GPS_MeasureMode"}, 
+    {PKEY_GPS_ProcessingMethod, L"PKEY_GPS_ProcessingMethod"}, 
+    {PKEY_GPS_Satellites, L"PKEY_GPS_Satellites"}, 
+    {PKEY_GPS_Speed, L"PKEY_GPS_Speed"}, 
+    {PKEY_GPS_SpeedDenominator, L"PKEY_GPS_SpeedDenominator"}, 
+    {PKEY_GPS_SpeedNumerator, L"PKEY_GPS_SpeedNumerator"}, 
+    {PKEY_GPS_SpeedRef, L"PKEY_GPS_SpeedRef"}, 
+    {PKEY_GPS_Status, L"PKEY_GPS_Status"}, 
+    {PKEY_GPS_Track, L"PKEY_GPS_Track"}, 
+    {PKEY_GPS_TrackDenominator, L"PKEY_GPS_TrackDenominator"}, 
+    {PKEY_GPS_TrackNumerator, L"PKEY_GPS_TrackNumerator"}, 
+    {PKEY_GPS_TrackRef, L"PKEY_GPS_TrackRef"}, 
+    {PKEY_GPS_VersionID, L"PKEY_GPS_VersionID"}, 
+    {PKEY_Image_BitDepth, L"PKEY_Image_BitDepth"}, 
+    {PKEY_Image_ColorSpace, L"PKEY_Image_ColorSpace"}, 
+    {PKEY_Image_CompressedBitsPerPixel, L"PKEY_Image_CompressedBitsPerPixel"}, 
+    {PKEY_Image_CompressedBitsPerPixelDenominator, L"PKEY_Image_CompressedBitsPerPixelDenominator"}, 
+    {PKEY_Image_CompressedBitsPerPixelNumerator, L"PKEY_Image_CompressedBitsPerPixelNumerator"}, 
+    {PKEY_Image_Compression, L"PKEY_Image_Compression"}, 
+    {PKEY_Image_CompressionText, L"PKEY_Image_CompressionText"}, 
+    {PKEY_Image_Dimensions, L"PKEY_Image_Dimensions"}, 
+    {PKEY_Image_HorizontalResolution, L"PKEY_Image_HorizontalResolution"}, 
+    {PKEY_Image_HorizontalSize, L"PKEY_Image_HorizontalSize"}, 
+    {PKEY_Image_ImageID, L"PKEY_Image_ImageID"}, 
+    {PKEY_Image_ResolutionUnit, L"PKEY_Image_ResolutionUnit"}, 
+    {PKEY_Image_VerticalResolution, L"PKEY_Image_VerticalResolution"}, 
+    {PKEY_Image_VerticalSize, L"PKEY_Image_VerticalSize"}, 
+    {PKEY_Journal_Contacts, L"PKEY_Journal_Contacts"}, 
+    {PKEY_Journal_EntryType, L"PKEY_Journal_EntryType"}, 
+    {PKEY_LayoutPattern_ContentViewModeForBrowse, L"PKEY_LayoutPattern_ContentViewModeForBrowse"}, 
+    {PKEY_LayoutPattern_ContentViewModeForSearch, L"PKEY_LayoutPattern_ContentViewModeForSearch"}, 
+    {PKEY_Link_Arguments, L"PKEY_Link_Arguments"}, 
+    {PKEY_Link_Comment, L"PKEY_Link_Comment"}, 
+    {PKEY_Link_DateVisited, L"PKEY_Link_DateVisited"}, 
+    {PKEY_Link_Description, L"PKEY_Link_Description"}, 
+    {PKEY_Link_Status, L"PKEY_Link_Status"}, 
+    {PKEY_Link_TargetExtension, L"PKEY_Link_TargetExtension"}, 
+    {PKEY_Link_TargetParsingPath, L"PKEY_Link_TargetParsingPath"}, 
+    {PKEY_Link_TargetSFGAOFlags, L"PKEY_Link_TargetSFGAOFlags"}, 
+    {PKEY_Media_AuthorUrl, L"PKEY_Media_AuthorUrl"}, 
+    {PKEY_Media_AverageLevel, L"PKEY_Media_AverageLevel"}, 
+    {PKEY_Media_ClassPrimaryID, L"PKEY_Media_ClassPrimaryID"}, 
+    {PKEY_Media_ClassSecondaryID, L"PKEY_Media_ClassSecondaryID"}, 
+    {PKEY_Media_CollectionGroupID, L"PKEY_Media_CollectionGroupID"}, 
+    {PKEY_Media_CollectionID, L"PKEY_Media_CollectionID"}, 
+    {PKEY_Media_ContentDistributor, L"PKEY_Media_ContentDistributor"}, 
+    {PKEY_Media_ContentID, L"PKEY_Media_ContentID"}, 
+    {PKEY_Media_CreatorApplication, L"PKEY_Media_CreatorApplication"}, 
+    {PKEY_Media_CreatorApplicationVersion, L"PKEY_Media_CreatorApplicationVersion"}, 
+    {PKEY_Media_DateEncoded, L"PKEY_Media_DateEncoded"}, 
+    {PKEY_Media_DateReleased, L"PKEY_Media_DateReleased"}, 
+    {PKEY_Media_Duration, L"PKEY_Media_Duration"}, 
+    {PKEY_Media_DVDID, L"PKEY_Media_DVDID"}, 
+    {PKEY_Media_EncodedBy, L"PKEY_Media_EncodedBy"}, 
+    {PKEY_Media_EncodingSettings, L"PKEY_Media_EncodingSettings"}, 
+    {PKEY_Media_FrameCount, L"PKEY_Media_FrameCount"}, 
+    {PKEY_Media_MCDI, L"PKEY_Media_MCDI"}, 
+    {PKEY_Media_MetadataContentProvider, L"PKEY_Media_MetadataContentProvider"}, 
+    {PKEY_Media_Producer, L"PKEY_Media_Producer"}, 
+    {PKEY_Media_PromotionUrl, L"PKEY_Media_PromotionUrl"}, 
+    {PKEY_Media_ProtectionType, L"PKEY_Media_ProtectionType"}, 
+    {PKEY_Media_ProviderRating, L"PKEY_Media_ProviderRating"}, 
+    {PKEY_Media_ProviderStyle, L"PKEY_Media_ProviderStyle"}, 
+    {PKEY_Media_Publisher, L"PKEY_Media_Publisher"}, 
+    {PKEY_Media_SubscriptionContentId, L"PKEY_Media_SubscriptionContentId"}, 
+    {PKEY_Media_SubTitle, L"PKEY_Media_SubTitle"}, 
+    {PKEY_Media_UniqueFileIdentifier, L"PKEY_Media_UniqueFileIdentifier"}, 
+    {PKEY_Media_UserNoAutoInfo, L"PKEY_Media_UserNoAutoInfo"}, 
+    {PKEY_Media_UserWebUrl, L"PKEY_Media_UserWebUrl"}, 
+    {PKEY_Media_Writer, L"PKEY_Media_Writer"}, 
+    {PKEY_Media_Year, L"PKEY_Media_Year"}, 
+    {PKEY_Message_AttachmentContents, L"PKEY_Message_AttachmentContents"}, 
+    {PKEY_Message_AttachmentNames, L"PKEY_Message_AttachmentNames"}, 
+    {PKEY_Message_BccAddress, L"PKEY_Message_BccAddress"}, 
+    {PKEY_Message_BccName, L"PKEY_Message_BccName"}, 
+    {PKEY_Message_CcAddress, L"PKEY_Message_CcAddress"}, 
+    {PKEY_Message_CcName, L"PKEY_Message_CcName"}, 
+    {PKEY_Message_ConversationID, L"PKEY_Message_ConversationID"}, 
+    {PKEY_Message_ConversationIndex, L"PKEY_Message_ConversationIndex"}, 
+    {PKEY_Message_DateReceived, L"PKEY_Message_DateReceived"}, 
+    {PKEY_Message_DateSent, L"PKEY_Message_DateSent"}, 
+    {PKEY_Message_Flags, L"PKEY_Message_Flags"}, 
+    {PKEY_Message_FromAddress, L"PKEY_Message_FromAddress"}, 
+    {PKEY_Message_FromName, L"PKEY_Message_FromName"}, 
+    {PKEY_Message_HasAttachments, L"PKEY_Message_HasAttachments"}, 
+    {PKEY_Message_IsFwdOrReply, L"PKEY_Message_IsFwdOrReply"}, 
+    {PKEY_Message_MessageClass, L"PKEY_Message_MessageClass"}, 
+    {PKEY_Message_ProofInProgress, L"PKEY_Message_ProofInProgress"}, 
+    {PKEY_Message_SenderAddress, L"PKEY_Message_SenderAddress"}, 
+    {PKEY_Message_SenderName, L"PKEY_Message_SenderName"}, 
+    {PKEY_Message_Store, L"PKEY_Message_Store"}, 
+    {PKEY_Message_ToAddress, L"PKEY_Message_ToAddress"}, 
+    {PKEY_Message_ToDoFlags, L"PKEY_Message_ToDoFlags"}, 
+    {PKEY_Message_ToDoTitle, L"PKEY_Message_ToDoTitle"}, 
+    {PKEY_Message_ToName, L"PKEY_Message_ToName"}, 
+    {PKEY_Music_AlbumArtist, L"PKEY_Music_AlbumArtist"}, 
+    {PKEY_Music_AlbumID, L"PKEY_Music_AlbumID"}, 
+    {PKEY_Music_AlbumTitle, L"PKEY_Music_AlbumTitle"}, 
+    {PKEY_Music_Artist, L"PKEY_Music_Artist"}, 
+    {PKEY_Music_BeatsPerMinute, L"PKEY_Music_BeatsPerMinute"}, 
+    {PKEY_Music_Composer, L"PKEY_Music_Composer"}, 
+    {PKEY_Music_Conductor, L"PKEY_Music_Conductor"}, 
+    {PKEY_Music_ContentGroupDescription, L"PKEY_Music_ContentGroupDescription"}, 
+    {PKEY_Music_DisplayArtist, L"PKEY_Music_DisplayArtist"}, 
+    {PKEY_Music_Genre, L"PKEY_Music_Genre"}, 
+    {PKEY_Music_InitialKey, L"PKEY_Music_InitialKey"}, 
+    {PKEY_Music_IsCompilation, L"PKEY_Music_IsCompilation"}, 
+    {PKEY_Music_Lyrics, L"PKEY_Music_Lyrics"}, 
+    {PKEY_Music_Mood, L"PKEY_Music_Mood"}, 
+    {PKEY_Music_PartOfSet, L"PKEY_Music_PartOfSet"}, 
+    {PKEY_Music_Period, L"PKEY_Music_Period"}, 
+    {PKEY_Music_SynchronizedLyrics, L"PKEY_Music_SynchronizedLyrics"}, 
+    {PKEY_Music_TrackNumber, L"PKEY_Music_TrackNumber"}, 
+    {PKEY_Note_Color, L"PKEY_Note_Color"}, 
+    {PKEY_Note_ColorText, L"PKEY_Note_ColorText"}, 
+    {PKEY_Photo_Aperture, L"PKEY_Photo_Aperture"}, 
+    {PKEY_Photo_ApertureDenominator, L"PKEY_Photo_ApertureDenominator"}, 
+    {PKEY_Photo_ApertureNumerator, L"PKEY_Photo_ApertureNumerator"}, 
+    {PKEY_Photo_Brightness, L"PKEY_Photo_Brightness"}, 
+    {PKEY_Photo_BrightnessDenominator, L"PKEY_Photo_BrightnessDenominator"}, 
+    {PKEY_Photo_BrightnessNumerator, L"PKEY_Photo_BrightnessNumerator"}, 
+    {PKEY_Photo_CameraManufacturer, L"PKEY_Photo_CameraManufacturer"}, 
+    {PKEY_Photo_CameraModel, L"PKEY_Photo_CameraModel"}, 
+    {PKEY_Photo_CameraSerialNumber, L"PKEY_Photo_CameraSerialNumber"}, 
+    {PKEY_Photo_Contrast, L"PKEY_Photo_Contrast"}, 
+    {PKEY_Photo_ContrastText, L"PKEY_Photo_ContrastText"}, 
+    {PKEY_Photo_DateTaken, L"PKEY_Photo_DateTaken"}, 
+    {PKEY_Photo_DigitalZoom, L"PKEY_Photo_DigitalZoom"}, 
+    {PKEY_Photo_DigitalZoomDenominator, L"PKEY_Photo_DigitalZoomDenominator"}, 
+    {PKEY_Photo_DigitalZoomNumerator, L"PKEY_Photo_DigitalZoomNumerator"}, 
+    {PKEY_Photo_Event, L"PKEY_Photo_Event"}, 
+    {PKEY_Photo_EXIFVersion, L"PKEY_Photo_EXIFVersion"}, 
+    {PKEY_Photo_ExposureBias, L"PKEY_Photo_ExposureBias"}, 
+    {PKEY_Photo_ExposureBiasDenominator, L"PKEY_Photo_ExposureBiasDenominator"}, 
+    {PKEY_Photo_ExposureBiasNumerator, L"PKEY_Photo_ExposureBiasNumerator"}, 
+    {PKEY_Photo_ExposureIndex, L"PKEY_Photo_ExposureIndex"}, 
+    {PKEY_Photo_ExposureIndexDenominator, L"PKEY_Photo_ExposureIndexDenominator"}, 
+    {PKEY_Photo_ExposureIndexNumerator, L"PKEY_Photo_ExposureIndexNumerator"}, 
+    {PKEY_Photo_ExposureProgram, L"PKEY_Photo_ExposureProgram"}, 
+    {PKEY_Photo_ExposureProgramText, L"PKEY_Photo_ExposureProgramText"}, 
+    {PKEY_Photo_ExposureTime, L"PKEY_Photo_ExposureTime"}, 
+    {PKEY_Photo_ExposureTimeDenominator, L"PKEY_Photo_ExposureTimeDenominator"}, 
+    {PKEY_Photo_ExposureTimeNumerator, L"PKEY_Photo_ExposureTimeNumerator"}, 
+    {PKEY_Photo_Flash, L"PKEY_Photo_Flash"}, 
+    {PKEY_Photo_FlashEnergy, L"PKEY_Photo_FlashEnergy"}, 
+    {PKEY_Photo_FlashEnergyDenominator, L"PKEY_Photo_FlashEnergyDenominator"}, 
+    {PKEY_Photo_FlashEnergyNumerator, L"PKEY_Photo_FlashEnergyNumerator"}, 
+    {PKEY_Photo_FlashManufacturer, L"PKEY_Photo_FlashManufacturer"}, 
+    {PKEY_Photo_FlashModel, L"PKEY_Photo_FlashModel"}, 
+    {PKEY_Photo_FlashText, L"PKEY_Photo_FlashText"}, 
+    {PKEY_Photo_FNumber, L"PKEY_Photo_FNumber"}, 
+    {PKEY_Photo_FNumberDenominator, L"PKEY_Photo_FNumberDenominator"}, 
+    {PKEY_Photo_FNumberNumerator, L"PKEY_Photo_FNumberNumerator"}, 
+    {PKEY_Photo_FocalLength, L"PKEY_Photo_FocalLength"}, 
+    {PKEY_Photo_FocalLengthDenominator, L"PKEY_Photo_FocalLengthDenominator"}, 
+    {PKEY_Photo_FocalLengthInFilm, L"PKEY_Photo_FocalLengthInFilm"}, 
+    {PKEY_Photo_FocalLengthNumerator, L"PKEY_Photo_FocalLengthNumerator"}, 
+    {PKEY_Photo_FocalPlaneXResolution, L"PKEY_Photo_FocalPlaneXResolution"}, 
+    {PKEY_Photo_FocalPlaneXResolutionDenominator, L"PKEY_Photo_FocalPlaneXResolutionDenominator"}, 
+    {PKEY_Photo_FocalPlaneXResolutionNumerator, L"PKEY_Photo_FocalPlaneXResolutionNumerator"}, 
+    {PKEY_Photo_FocalPlaneYResolution, L"PKEY_Photo_FocalPlaneYResolution"}, 
+    {PKEY_Photo_FocalPlaneYResolutionDenominator, L"PKEY_Photo_FocalPlaneYResolutionDenominator"}, 
+    {PKEY_Photo_FocalPlaneYResolutionNumerator, L"PKEY_Photo_FocalPlaneYResolutionNumerator"}, 
+    {PKEY_Photo_GainControl, L"PKEY_Photo_GainControl"}, 
+    {PKEY_Photo_GainControlDenominator, L"PKEY_Photo_GainControlDenominator"}, 
+    {PKEY_Photo_GainControlNumerator, L"PKEY_Photo_GainControlNumerator"}, 
+    {PKEY_Photo_GainControlText, L"PKEY_Photo_GainControlText"}, 
+    {PKEY_Photo_ISOSpeed, L"PKEY_Photo_ISOSpeed"}, 
+    {PKEY_Photo_LensManufacturer, L"PKEY_Photo_LensManufacturer"}, 
+    {PKEY_Photo_LensModel, L"PKEY_Photo_LensModel"}, 
+    {PKEY_Photo_LightSource, L"PKEY_Photo_LightSource"}, 
+    {PKEY_Photo_MakerNote, L"PKEY_Photo_MakerNote"}, 
+    {PKEY_Photo_MakerNoteOffset, L"PKEY_Photo_MakerNoteOffset"}, 
+    {PKEY_Photo_MaxAperture, L"PKEY_Photo_MaxAperture"}, 
+    {PKEY_Photo_MaxApertureDenominator, L"PKEY_Photo_MaxApertureDenominator"}, 
+    {PKEY_Photo_MaxApertureNumerator, L"PKEY_Photo_MaxApertureNumerator"}, 
+    {PKEY_Photo_MeteringMode, L"PKEY_Photo_MeteringMode"}, 
+    {PKEY_Photo_MeteringModeText, L"PKEY_Photo_MeteringModeText"}, 
+    {PKEY_Photo_Orientation, L"PKEY_Photo_Orientation"}, 
+    {PKEY_Photo_OrientationText, L"PKEY_Photo_OrientationText"}, 
+    {PKEY_Photo_PeopleNames, L"PKEY_Photo_PeopleNames"}, 
+    {PKEY_Photo_PhotometricInterpretation, L"PKEY_Photo_PhotometricInterpretation"}, 
+    {PKEY_Photo_PhotometricInterpretationText, L"PKEY_Photo_PhotometricInterpretationText"}, 
+    {PKEY_Photo_ProgramMode, L"PKEY_Photo_ProgramMode"}, 
+    {PKEY_Photo_ProgramModeText, L"PKEY_Photo_ProgramModeText"}, 
+    {PKEY_Photo_RelatedSoundFile, L"PKEY_Photo_RelatedSoundFile"}, 
+    {PKEY_Photo_Saturation, L"PKEY_Photo_Saturation"}, 
+    {PKEY_Photo_SaturationText, L"PKEY_Photo_SaturationText"}, 
+    {PKEY_Photo_Sharpness, L"PKEY_Photo_Sharpness"}, 
+    {PKEY_Photo_SharpnessText, L"PKEY_Photo_SharpnessText"}, 
+    {PKEY_Photo_ShutterSpeed, L"PKEY_Photo_ShutterSpeed"}, 
+    {PKEY_Photo_ShutterSpeedDenominator, L"PKEY_Photo_ShutterSpeedDenominator"}, 
+    {PKEY_Photo_ShutterSpeedNumerator, L"PKEY_Photo_ShutterSpeedNumerator"}, 
+    {PKEY_Photo_SubjectDistance, L"PKEY_Photo_SubjectDistance"}, 
+    {PKEY_Photo_SubjectDistanceDenominator, L"PKEY_Photo_SubjectDistanceDenominator"}, 
+    {PKEY_Photo_SubjectDistanceNumerator, L"PKEY_Photo_SubjectDistanceNumerator"}, 
+    {PKEY_Photo_TagViewAggregate, L"PKEY_Photo_TagViewAggregate"}, 
+    {PKEY_Photo_TranscodedForSync, L"PKEY_Photo_TranscodedForSync"}, 
+    {PKEY_Photo_WhiteBalance, L"PKEY_Photo_WhiteBalance"}, 
+    {PKEY_Photo_WhiteBalanceText, L"PKEY_Photo_WhiteBalanceText"}, 
+    {PKEY_PropGroup_Advanced, L"PKEY_PropGroup_Advanced"}, 
+    {PKEY_PropGroup_Audio, L"PKEY_PropGroup_Audio"}, 
+    {PKEY_PropGroup_Calendar, L"PKEY_PropGroup_Calendar"}, 
+    {PKEY_PropGroup_Camera, L"PKEY_PropGroup_Camera"}, 
+    {PKEY_PropGroup_Contact, L"PKEY_PropGroup_Contact"}, 
+    {PKEY_PropGroup_Content, L"PKEY_PropGroup_Content"}, 
+    {PKEY_PropGroup_Description, L"PKEY_PropGroup_Description"}, 
+    {PKEY_PropGroup_FileSystem, L"PKEY_PropGroup_FileSystem"}, 
+    {PKEY_PropGroup_General, L"PKEY_PropGroup_General"}, 
+    {PKEY_PropGroup_GPS, L"PKEY_PropGroup_GPS"}, 
+    {PKEY_PropGroup_Image, L"PKEY_PropGroup_Image"}, 
+    {PKEY_PropGroup_Media, L"PKEY_PropGroup_Media"}, 
+    {PKEY_PropGroup_MediaAdvanced, L"PKEY_PropGroup_MediaAdvanced"}, 
+    {PKEY_PropGroup_Message, L"PKEY_PropGroup_Message"}, 
+    {PKEY_PropGroup_Music, L"PKEY_PropGroup_Music"}, 
+    {PKEY_PropGroup_Origin, L"PKEY_PropGroup_Origin"}, 
+    {PKEY_PropGroup_PhotoAdvanced, L"PKEY_PropGroup_PhotoAdvanced"}, 
+    {PKEY_PropGroup_RecordedTV, L"PKEY_PropGroup_RecordedTV"}, 
+    {PKEY_PropGroup_Video, L"PKEY_PropGroup_Video"}, 
+    {PKEY_InfoTipText, L"PKEY_InfoTipText"}, 
+    {PKEY_PropList_ConflictPrompt, L"PKEY_PropList_ConflictPrompt"}, 
+    {PKEY_PropList_ContentViewModeForBrowse, L"PKEY_PropList_ContentViewModeForBrowse"}, 
+    {PKEY_PropList_ContentViewModeForSearch, L"PKEY_PropList_ContentViewModeForSearch"}, 
+    {PKEY_PropList_ExtendedTileInfo, L"PKEY_PropList_ExtendedTileInfo"}, 
+    {PKEY_PropList_FileOperationPrompt, L"PKEY_PropList_FileOperationPrompt"}, 
+    {PKEY_PropList_FullDetails, L"PKEY_PropList_FullDetails"}, 
+    {PKEY_PropList_InfoTip, L"PKEY_PropList_InfoTip"}, 
+    {PKEY_PropList_NonPersonal, L"PKEY_PropList_NonPersonal"}, 
+    {PKEY_PropList_PreviewDetails, L"PKEY_PropList_PreviewDetails"}, 
+    {PKEY_PropList_PreviewTitle, L"PKEY_PropList_PreviewTitle"}, 
+    {PKEY_PropList_QuickTip, L"PKEY_PropList_QuickTip"}, 
+    {PKEY_PropList_TileInfo, L"PKEY_PropList_TileInfo"}, 
+    {PKEY_PropList_XPDetailsPanel, L"PKEY_PropList_XPDetailsPanel"}, 
+    {PKEY_RecordedTV_ChannelNumber, L"PKEY_RecordedTV_ChannelNumber"}, 
+    {PKEY_RecordedTV_Credits, L"PKEY_RecordedTV_Credits"}, 
+    {PKEY_RecordedTV_DateContentExpires, L"PKEY_RecordedTV_DateContentExpires"}, 
+    {PKEY_RecordedTV_EpisodeName, L"PKEY_RecordedTV_EpisodeName"}, 
+    {PKEY_RecordedTV_IsATSCContent, L"PKEY_RecordedTV_IsATSCContent"}, 
+    {PKEY_RecordedTV_IsClosedCaptioningAvailable, L"PKEY_RecordedTV_IsClosedCaptioningAvailable"}, 
+    {PKEY_RecordedTV_IsDTVContent, L"PKEY_RecordedTV_IsDTVContent"}, 
+    {PKEY_RecordedTV_IsHDContent, L"PKEY_RecordedTV_IsHDContent"}, 
+    {PKEY_RecordedTV_IsRepeatBroadcast, L"PKEY_RecordedTV_IsRepeatBroadcast"}, 
+    {PKEY_RecordedTV_IsSAP, L"PKEY_RecordedTV_IsSAP"}, 
+    {PKEY_RecordedTV_NetworkAffiliation, L"PKEY_RecordedTV_NetworkAffiliation"}, 
+    {PKEY_RecordedTV_OriginalBroadcastDate, L"PKEY_RecordedTV_OriginalBroadcastDate"}, 
+    {PKEY_RecordedTV_ProgramDescription, L"PKEY_RecordedTV_ProgramDescription"}, 
+    {PKEY_RecordedTV_RecordingTime, L"PKEY_RecordedTV_RecordingTime"}, 
+    {PKEY_RecordedTV_StationCallSign, L"PKEY_RecordedTV_StationCallSign"}, 
+    {PKEY_RecordedTV_StationName, L"PKEY_RecordedTV_StationName"}, 
+    {PKEY_Search_AutoSummary, L"PKEY_Search_AutoSummary"}, 
+    {PKEY_Search_ContainerHash, L"PKEY_Search_ContainerHash"}, 
+    {PKEY_Search_Contents, L"PKEY_Search_Contents"}, 
+    {PKEY_Search_EntryID, L"PKEY_Search_EntryID"}, 
+    {PKEY_Search_ExtendedProperties, L"PKEY_Search_ExtendedProperties"}, 
+    {PKEY_Search_GatherTime, L"PKEY_Search_GatherTime"}, 
+    {PKEY_Search_HitCount, L"PKEY_Search_HitCount"}, 
+    {PKEY_Search_IsClosedDirectory, L"PKEY_Search_IsClosedDirectory"}, 
+    {PKEY_Search_IsFullyContained, L"PKEY_Search_IsFullyContained"}, 
+    {PKEY_Search_QueryFocusedSummary, L"PKEY_Search_QueryFocusedSummary"}, 
+    {PKEY_Search_QueryFocusedSummaryWithFallback, L"PKEY_Search_QueryFocusedSummaryWithFallback"}, 
+    {PKEY_Search_Rank, L"PKEY_Search_Rank"}, 
+    {PKEY_Search_Store, L"PKEY_Search_Store"}, 
+    {PKEY_Search_UrlToIndex, L"PKEY_Search_UrlToIndex"}, 
+    {PKEY_Search_UrlToIndexWithModificationTime, L"PKEY_Search_UrlToIndexWithModificationTime"}, 
+    {PKEY_DescriptionID, L"PKEY_DescriptionID"}, 
+    {PKEY_InternalName, L"PKEY_InternalName"}, 
+    {PKEY_Link_TargetSFGAOFlagsStrings, L"PKEY_Link_TargetSFGAOFlagsStrings"}, 
+    {PKEY_Link_TargetUrl, L"PKEY_Link_TargetUrl"}, 
+    {PKEY_NamespaceCLSID, L"PKEY_NamespaceCLSID"}, 
+    {PKEY_Shell_SFGAOFlagsStrings, L"PKEY_Shell_SFGAOFlagsStrings"}, 
+    {PKEY_AppUserModel_ExcludeFromShowInNewInstall, L"PKEY_AppUserModel_ExcludeFromShowInNewInstall"}, 
+    {PKEY_AppUserModel_ID, L"PKEY_AppUserModel_ID"}, 
+    {PKEY_AppUserModel_IsDestListSeparator, L"PKEY_AppUserModel_IsDestListSeparator"}, 
+    {PKEY_AppUserModel_PreventPinning, L"PKEY_AppUserModel_PreventPinning"}, 
+    {PKEY_AppUserModel_RelaunchCommand, L"PKEY_AppUserModel_RelaunchCommand"}, 
+    {PKEY_AppUserModel_RelaunchDisplayNameResource, L"PKEY_AppUserModel_RelaunchDisplayNameResource"}, 
+    {PKEY_AppUserModel_RelaunchIconResource, L"PKEY_AppUserModel_RelaunchIconResource"}, 
+    {PKEY_Software_DateLastUsed, L"PKEY_Software_DateLastUsed"}, 
+    {PKEY_Software_ProductName, L"PKEY_Software_ProductName"}, 
+    {PKEY_Sync_Comments, L"PKEY_Sync_Comments"}, 
+    {PKEY_Sync_ConflictDescription, L"PKEY_Sync_ConflictDescription"}, 
+    {PKEY_Sync_ConflictFirstLocation, L"PKEY_Sync_ConflictFirstLocation"}, 
+    {PKEY_Sync_ConflictSecondLocation, L"PKEY_Sync_ConflictSecondLocation"}, 
+    {PKEY_Sync_HandlerCollectionID, L"PKEY_Sync_HandlerCollectionID"}, 
+    {PKEY_Sync_HandlerID, L"PKEY_Sync_HandlerID"}, 
+    {PKEY_Sync_HandlerName, L"PKEY_Sync_HandlerName"}, 
+    {PKEY_Sync_HandlerType, L"PKEY_Sync_HandlerType"}, 
+    {PKEY_Sync_HandlerTypeLabel, L"PKEY_Sync_HandlerTypeLabel"}, 
+    {PKEY_Sync_ItemID, L"PKEY_Sync_ItemID"}, 
+    {PKEY_Sync_ItemName, L"PKEY_Sync_ItemName"}, 
+    {PKEY_Sync_ProgressPercentage, L"PKEY_Sync_ProgressPercentage"}, 
+    {PKEY_Sync_State, L"PKEY_Sync_State"}, 
+    {PKEY_Sync_Status, L"PKEY_Sync_Status"}, 
+    {PKEY_Task_BillingInformation, L"PKEY_Task_BillingInformation"}, 
+    {PKEY_Task_CompletionStatus, L"PKEY_Task_CompletionStatus"}, 
+    {PKEY_Task_Owner, L"PKEY_Task_Owner"}, 
+    {PKEY_Video_Compression, L"PKEY_Video_Compression"}, 
+    {PKEY_Video_Director, L"PKEY_Video_Director"}, 
+    {PKEY_Video_EncodingBitrate, L"PKEY_Video_EncodingBitrate"}, 
+    {PKEY_Video_FourCC, L"PKEY_Video_FourCC"}, 
+    {PKEY_Video_FrameHeight, L"PKEY_Video_FrameHeight"}, 
+    {PKEY_Video_FrameRate, L"PKEY_Video_FrameRate"}, 
+    {PKEY_Video_FrameWidth, L"PKEY_Video_FrameWidth"}, 
+    {PKEY_Video_HorizontalAspectRatio, L"PKEY_Video_HorizontalAspectRatio"}, 
+    {PKEY_Video_SampleSize, L"PKEY_Video_SampleSize"}, 
+    {PKEY_Video_StreamName, L"PKEY_Video_StreamName"}, 
+    {PKEY_Video_StreamNumber, L"PKEY_Video_StreamNumber"}, 
+    {PKEY_Video_TotalBitrate, L"PKEY_Video_TotalBitrate"}, 
+    {PKEY_Video_TranscodedForSync, L"PKEY_Video_TranscodedForSync"}, 
+    {PKEY_Video_VerticalAspectRatio, L"PKEY_Video_VerticalAspectRatio"}, 
+    {PKEY_Volume_FileSystem, L"PKEY_Volume_FileSystem"}, 
+    {PKEY_Volume_IsMappedDrive, L"PKEY_Volume_IsMappedDrive"}, 
+    {PKEY_Volume_IsRoot, L"PKEY_Volume_IsRoot"}, 
+
+// From mfidl.h        
+    {MFPKEY_SourceOpenMonitor, L"MFPKEY_SourceOpenMonitor"}, 
+    {MFPKEY_ASFMediaSource_ApproxSeek, L"MFPKEY_ASFMediaSource_ApproxSeek"}, 
+    {MFPKEY_ASFMediaSource_IterativeSeekIfNoIndex, L"MFPKEY_ASFMediaSource_IterativeSeekIfNoIndex"}, 
+    {MFPKEY_ASFMediaSource_IterativeSeek_Max_Count, L"MFPKEY_ASFMediaSource_IterativeSeek_Max_Count"}, 
+    {MFPKEY_ASFMediaSource_IterativeSeek_Tolerance_In_MilliSecond, L"MFPKEY_ASFMediaSource_IterativeSeek_Tolerance_In_MilliSecond"}, 
+    {MFPKEY_Content_DLNA_Profile_ID, L"MFPKEY_Content_DLNA_Profile_ID"}, 
+    {MFPKEY_MediaSource_DisableReadAhead, L"MFPKEY_MediaSource_DisableReadAhead"}, 
+};
+
+static DWORD g_SizeOfKnownPKeys = ARRAYSIZE(g_Known_PKeys);
+
+static struct tag_H264VLevel
+{
+    eAVEncH264VLevel h264VLevel;
+    LPCWSTR lpstrName;
+} g_H264VLevel[] = 
+{
+    {eAVEncH264VLevel1, L"eAVEncH264VLevel1"}, 
+    {eAVEncH264VLevel1_b, L"eAVEncH264VLevel1_b"}, 
+    {eAVEncH264VLevel1_1, L"eAVEncH264VLevel1_1"}, 
+    {eAVEncH264VLevel1_2, L"eAVEncH264VLevel1_2"}, 
+    {eAVEncH264VLevel1_3, L"eAVEncH264VLevel1_3"}, 
+    {eAVEncH264VLevel2, L"eAVEncH264VLevel2"}, 
+    {eAVEncH264VLevel2_1, L"eAVEncH264VLevel2_1"}, 
+    {eAVEncH264VLevel2_2, L"eAVEncH264VLevel2_2"}, 
+    {eAVEncH264VLevel3, L"eAVEncH264VLevel3"}, 
+    {eAVEncH264VLevel3_1, L"eAVEncH264VLevel3_1"}, 
+    {eAVEncH264VLevel3_2, L"eAVEncH264VLevel3_2"}, 
+    {eAVEncH264VLevel4, L"eAVEncH264VLevel4"}, 
+    {eAVEncH264VLevel4_1, L"eAVEncH264VLevel4_1"}, 
+    {eAVEncH264VLevel4_2, L"eAVEncH264VLevel4_2"}, 
+    {eAVEncH264VLevel5, L"eAVEncH264VLevel5"}, 
+    {eAVEncH264VLevel5_1, L"eAVEncH264VLevel5_1"}, 
+};
+
+static DWORD g_SizeOfH264VLevel = ARRAYSIZE(g_H264VLevel);
+
+static struct tag_H264VProfile
+{
+    eAVEncH264VProfile h264VProfile;
+    LPCWSTR lpstrName;
+} g_H264VProfile[] = 
+{
+    {eAVEncH264VProfile_unknown, L"eAVEncH264VProfile_unknown"}, 
+    {eAVEncH264VProfile_Simple, L"eAVEncH264VProfile_Simple"}, 
+    {eAVEncH264VProfile_Base, L"eAVEncH264VProfile_Base"}, 
+    {eAVEncH264VProfile_Main, L"eAVEncH264VProfile_Main"}, 
+    {eAVEncH264VProfile_High, L"eAVEncH264VProfile_High"}, 
+    {eAVEncH264VProfile_422, L"eAVEncH264VProfile_422"}, 
+    {eAVEncH264VProfile_High10, L"eAVEncH264VProfile_High10"}, 
+    {eAVEncH264VProfile_444, L"eAVEncH264VProfile_444"}, 
+    {eAVEncH264VProfile_Extended, L"eAVEncH264VProfile_Extended"}, 
+};
+
+static DWORD g_SizeOfH264VProfile = ARRAYSIZE(g_H264VProfile);
+
+static struct tag_MFVIM
+{
+    MFVideoInterlaceMode mfVIM;
+    LPCWSTR lpstrName;
+} g_MFVIM[] = 
+{
+    {MFVideoInterlace_Unknown, L"MFVideoInterlace_Unknown"}, 
+    {MFVideoInterlace_Progressive, L"MFVideoInterlace_Progressive"}, 
+    {MFVideoInterlace_FieldInterleavedUpperFirst, L"MFVideoInterlace_FieldInterleavedUpperFirst"}, 
+    {MFVideoInterlace_FieldInterleavedLowerFirst, L"MFVideoInterlace_FieldInterleavedLowerFirst"}, 
+    {MFVideoInterlace_FieldSingleUpper, L"MFVideoInterlace_FieldSingleUpper"}, 
+    {MFVideoInterlace_FieldSingleLower, L"MFVideoInterlace_FieldSingleLower"}, 
+    {MFVideoInterlace_MixedInterlaceOrProgressive, L"MFVideoInterlace_MixedInterlaceOrProgressive"}, 
+    {MFVideoInterlace_Last, L"MFVideoInterlace_Last"}, 
+    {MFVideoInterlace_ForceDWORD, L"MFVideoInterlace_ForceDWORD"}, 
+};
+
+static DWORD g_SizeOfMFVIM = ARRAYSIZE(g_MFVIM);
+
+///////////////////////////////////////////////////////////////////////////////
+HRESULT
+CDumperHelper::FileTimeToString(
+    __in FILETIME *ft, 
+    __out LPWSTR pwszPropVal)
+{
+    HRESULT hr = S_OK;
+    FILETIME lft;
+    SYSTEMTIME st;
+    WCHAR wszLocalDate[MAX_DATETIME_LEN];
+    WCHAR wszLocalTime[MAX_DATETIME_LEN];
+
+    FileTimeToLocalFileTime(
+		ft, 
+        &lft);
+    FileTimeToSystemTime(
+		&lft, 
+        &st);
+    GetDateFormat(
+		LOCALE_USER_DEFAULT, 
+        DATE_LONGDATE, 
+        &st, 
+        NULL,
+        wszLocalDate, 
+        MAX_DATETIME_LEN);
+    GetTimeFormat(
+		LOCALE_USER_DEFAULT, 
+        0, 
+        &st, 
+        NULL, 
+        wszLocalTime, 
+        MAX_DATETIME_LEN);
+    StringCchPrintf(
+        pwszPropVal, 
+        MAX_LEN_MULTILINE, 
+        L" %ls %ls", 
+        wszLocalDate, 
+        wszLocalTime);
+
+    return hr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+HRESULT
+CDumperHelper::TimeToString(
+    __in ULARGE_INTEGER time, 
+    __out LPWSTR pwszPropVal)
+{
+    HRESULT hr = S_OK;
+
+    ULONGLONG milliseconds = time.QuadPart / 10000;
+    ULONGLONG seconds = milliseconds / 1000;
+    milliseconds = milliseconds - seconds * 1000;
+    ULONGLONG minutes = seconds / 60;
+    seconds = seconds - minutes * 60;
+    ULONGLONG hours = minutes / 60;
+    minutes = minutes - hours * 60;
+
+    hr = StringCchPrintf(
+        pwszPropVal, 
+        MAX_LEN_ONELINE, 
+        L"%lluh %llum %llu.%llus", 
+        hours, 
+        minutes, 
+        seconds, 
+        milliseconds);
+
+    return hr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+HRESULT
+CDumperHelper::HexToString(
+    __in PROPVARIANT varPropVal, 
+    __out LPWSTR pwszPropVal)
+{
+    HRESULT hr = S_OK;
+    WCHAR pwszTemp[MAX_LEN_MULTILINE];
+
+    StringCchCopy(
+        pwszPropVal, 
+        MAX_LEN_MULTILINE, 
+        L"\r\n            ");
+    for (DWORD dw = 0; dw < varPropVal.caub.cElems; dw++)
+    {
+        StringCchPrintf(
+            pwszTemp, 
+            MAX_LEN_MULTILINE, 
+            L"0x%02X", 
+            varPropVal.caub.pElems[dw]);
+        StringCchCat(
+            pwszPropVal, 
+            MAX_LEN_MULTILINE, 
+            pwszTemp);
+        if (dw < varPropVal.caub.cElems - 1)
+        {
+            StringCchCat(
+                pwszPropVal, 
+                MAX_LEN_MULTILINE, 
+                L", ");
+            if (0 == (dw + 1) % 10)
+            {
+                StringCchCat(
+                    pwszPropVal, 
+                    MAX_LEN_MULTILINE, 
+                    L"\r\n            ");
+          }
+      }
+  }
+
+    return hr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+HRESULT
+CDumperHelper::HexToString(
+    __in BYTE *pBuf, 
+    __in DWORD cBuf, 
+    __out LPWSTR pwszPropVal)
+{
+    HRESULT hr = S_OK;
+
+    WCHAR pwszTemp[MAX_LEN_MULTILINE];
+    StringCchCopy(
+        pwszPropVal, 
+        MAX_LEN_MULTILINE, 
+        L"\r\n            ");
+    for (DWORD dw = 0; dw < cBuf; dw++)
+    {
+        StringCchPrintf(
+            pwszTemp, 
+            MAX_LEN_MULTILINE, 
+            L"0x%02X", 
+            pBuf[dw]);
+        StringCchCat(
+            pwszPropVal, 
+            MAX_LEN_MULTILINE, 
+            pwszTemp);
+        if (dw < cBuf - 1)
+        {
+            StringCchCat(
+                pwszPropVal, 
+                MAX_LEN_MULTILINE, 
+                L", ");
+            if (0 == (dw + 1) % 10)
+            {
+                StringCchCat(
+                    pwszPropVal, 
+                    MAX_LEN_MULTILINE, 
+                    L"\r\n            ");
+          }
+      }
+  }
+
+    return hr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+HRESULT
+CDumperHelper::PropVariantToString(
+    __in PROPVARIANT varPropVal, 
+    __out LPWSTR pwszPropVal)
+{
+    HRESULT hr = S_OK;
+
+    CHECK_HR(hr = ::PropVariantToString(
+        varPropVal, 
+        pwszPropVal, 
+        MAX_LEN_MULTILINE));
+
+done:
+    return hr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+HRESULT
+CDumperHelper::MFGUIDToString(
+    __in GUID guid, 
+    __out LPWSTR pwszName)
+{
+    HRESULT hr = S_OK;
+    LPWSTR pwszGUID = NULL;
+    BOOL bFound = FALSE;
+
+    for (DWORD dw = 0; dw < g_SizeOfKnownGUIDs; dw++)
+    {
+        if (IsEqualGUID(
+            guid, 
+            g_KnownGUIDs[dw].guid))
+        {
+            hr = StringCchCopy(
+                pwszName, 
+                MAX_LEN_ONELINE, 
+                g_KnownGUIDs[dw].lpstrName);
+            if (S_OK == hr)
+            {
+                bFound = TRUE;
+            }
+            break;
+        }
+    }
+
+    if (FALSE == bFound)
+    {
+        StringFromCLSID(guid, &pwszGUID);
+        hr = StringCchCopy(
+            pwszName, 
+            MAX_LEN_ONELINE, 
+            pwszGUID);
+        CoTaskMemFree(pwszGUID);
+    }
+
+    return hr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+HRESULT
+CDumperHelper::MFGUIDToString(
+    __in LPWSTR pwszGUID, 
+    __out LPWSTR pwszName)
+{
+    HRESULT hr = S_OK;
+    BOOL bFound = FALSE;
+    GUID guid = GUID_NULL;
+
+    CHECK_HR(hr = CLSIDFromString(
+        pwszGUID, 
+        &guid));
+    for (DWORD dw = 0; dw < g_SizeOfKnownGUIDs; dw++)
+    {
+        if (IsEqualGUID(
+            guid, 
+            g_KnownGUIDs[dw].guid))
+        {
+            hr = StringCchCopy(
+                pwszName, 
+                MAX_LEN_ONELINE, 
+                g_KnownGUIDs[dw].lpstrName);
+            if (S_OK == hr)
+            {
+                bFound = TRUE;
+            }
+            break;
+        }
+    }
+    if (FALSE == bFound)
+    {
+        hr = StringCchCopy(
+            pwszName, 
+            MAX_LEN_ONELINE, 
+            pwszGUID);
+    }
+
+done:
+    return hr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+HRESULT
+CDumperHelper::PKeyToString(
+    __in PROPERTYKEY pkey, 
+    __out LPWSTR pwszName)
+{
+    HRESULT hr = S_OK;
+    BOOL bFound = FALSE;
+    LPWSTR pwszPKey = NULL;
+
+    for (DWORD dw = 0; dw < g_SizeOfKnownPKeys; dw++)
+    {
+        if (IsEqualPropertyKey(
+            pkey, 
+            g_Known_PKeys[dw].propKey))
+        {
+            hr = StringCchCopy(
+                pwszName, 
+                MAX_LEN_ONELINE, 
+                g_Known_PKeys[dw].pwszPropKey);
+            if (S_OK == hr)
+            {
+                bFound = TRUE;
+            }
+            break;
+        }
+    }
+
+    if (FALSE == bFound)
+    {
+        CHECK_HR(hr = StringFromCLSID(
+            pkey.fmtid, 
+            &pwszPKey));
+        CHECK_HR(hr = StringCchPrintf(
+            pwszName, 
+            MAX_LEN_ONELINE, 
+            L"%ls, %d", 
+            pwszPKey, 
+            pkey.pid));
+    }
+
+done:
+    if (NULL != pwszPKey)
+    {
+        CoTaskMemFree(pwszPKey);
+  }
+
+    return hr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+HRESULT
+CDumperHelper::VideoInterlaceModeToString(
+    __in MFVideoInterlaceMode mfVIM, 
+    __out LPWSTR pwszName)
+{
+    HRESULT hr = S_OK;
+    BOOL bFound = FALSE;
+
+    for (DWORD dw = 0; dw < g_SizeOfMFVIM; dw++)
+    {
+        if (g_MFVIM[dw].mfVIM == mfVIM)
+        {
+            hr = StringCchCopy(
+                pwszName, 
+                MAX_LEN_ONELINE, 
+                g_MFVIM[dw].lpstrName);
+            if (S_OK == hr)
+            {
+                bFound = TRUE;
+            }
+            break;
+        }
+    }
+
+    if (FALSE == bFound)
+    {
+        CHECK_HR(hr = StringCchPrintf(
+            pwszName, 
+            MAX_LEN_ONELINE, 
+            L"%d", 
+            mfVIM));
+    }
+
+done:
+    return hr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+HRESULT
+CDumperHelper::MPEG2LevelToString(
+    __in eAVEncH264VLevel h264VLevel, 
+    __out LPWSTR pwszName)
+{
+    HRESULT hr = S_OK;
+    BOOL bFound = FALSE;
+
+    for (DWORD dw = 0; dw < g_SizeOfH264VLevel; dw++)
+    {
+        if (g_H264VLevel[dw].h264VLevel == h264VLevel)
+        {
+            hr = StringCchCopy(
+                pwszName, 
+                MAX_LEN_ONELINE, 
+                g_H264VLevel[dw].lpstrName);
+            if (S_OK == hr)
+            {
+                bFound = TRUE;
+            }
+            break;
+        }
+    }
+
+    if (FALSE == bFound)
+    {
+        CHECK_HR(hr = StringCchPrintf(
+            pwszName, 
+            MAX_LEN_ONELINE, 
+            L"%d", 
+            h264VLevel));
+    }
+
+done:
+    return hr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+HRESULT
+CDumperHelper::MPEG2ProfileToString(
+    __in eAVEncH264VProfile h264VProfile, 
+    __out LPWSTR pwszName)
+{
+    HRESULT hr = S_OK;
+    BOOL bFound = FALSE;
+
+    for (DWORD dw = 0; dw < g_SizeOfH264VProfile; dw++)
+    {
+        if (g_H264VProfile[dw].h264VProfile == h264VProfile)
+        {
+            hr = StringCchCopy(
+                pwszName, 
+                MAX_LEN_ONELINE, 
+                g_H264VProfile[dw].lpstrName);
+            if (S_OK == hr)
+            {
+                bFound = TRUE;
+            }
+            break;
+        }
+    }
+
+    if (FALSE == bFound)
+    {
+        CHECK_HR(hr = StringCchPrintf(
+            pwszName, 
+            MAX_LEN_ONELINE, 
+            L"%d", 
+            h264VProfile));
+    }
+
+done:
+    return hr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+HRESULT
+CDumperHelper::PrintColor(
+    __in WORD theColor, 
+    __in WCHAR *pwsz, 
+    __in ...)
+{
+    HRESULT hr = S_OK;
+    HANDLE hConsole;
+    CONSOLE_SCREEN_BUFFER_INFO csi;
+    va_list args;
+
+    va_start(
+        args, 
+        pwsz);
+
+    // Save color
+    hConsole = GetStdHandle(
+        STD_OUTPUT_HANDLE);  // Get handle to standard output
+    GetConsoleScreenBufferInfo(
+            hConsole, 
+            &csi); // store 'old' attributes'
+
+    // Change color
+    SetConsoleTextAttribute(
+        hConsole, 
+        theColor);  // set the text attribute of the previous handle
+
+    // Actual print
+    vwprintf_s(
+        pwsz, 
+        args);
+
+    // Restore color
+    SetConsoleTextAttribute(
+        hConsole, 
+        csi.wAttributes);
+
+    va_end(args);
+
+    return hr;
+}
+

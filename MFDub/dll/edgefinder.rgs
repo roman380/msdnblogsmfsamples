@@ -1,0 +1,25 @@
+HKCR
+{
+	mfve.MfveEdgeFinder.1 = s 'MFVE Edge Finder MFT'
+	{
+		CLSID = s '{F8A7E6A5-1E0B-4ec8-ADB6-23A44D65707D}'
+	}
+	mfve.MfveEdgeFinder = s 'MFVE Edge Finder MFT'
+	{
+		CLSID = s '{F8A7E6A5-1E0B-4ec8-ADB6-23A44D65707D}'
+		CurVer = s 'mfveutil.EdgeFinder.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {F8A7E6A5-1E0B-4ec8-ADB6-23A44D65707D} = s 'MFVE Edge Finder MFT'
+		{
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Both'
+			}
+			val AppID = s '%APPID%'
+			'TypeLib' = s '{8C4AA2DD-9633-4d44-BFF4-7A2CCD464269}'
+			'Version' = s '1.0'
+		}
+	}
+}

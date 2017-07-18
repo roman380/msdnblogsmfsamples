@@ -1,0 +1,25 @@
+HKCR
+{
+	mfve.MfveHistEqual.1 = s 'MFVE Histogram Equalization MFT'
+	{
+		CLSID = s '{4EF1157C-791E-4838-840A-C892110D756C}'
+	}
+	mfve.MfveHistEqual = s 'MFVE Histogram Equalization MFT'
+	{
+		CLSID = s '{4EF1157C-791E-4838-840A-C892110D756C}'
+		CurVer = s 'mfveutil.HistEqual.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {4EF1157C-791E-4838-840A-C892110D756C} = s 'MFVE Histogram Equalization MFT'
+		{
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Both'
+			}
+			val AppID = s '%APPID%'
+			'TypeLib' = s '{8C4AA2DD-9633-4d44-BFF4-7A2CCD464269}'
+			'Version' = s '1.0'
+		}
+	}
+}

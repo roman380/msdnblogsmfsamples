@@ -1,0 +1,25 @@
+HKCR
+{
+	mfve.MfveUnsharpMask.1 = s 'MFVE Resize & Crop MFT'
+	{
+		CLSID = s '{70B44AAE-A6BE-4cd3-A4B4-A7567220B061}'
+	}
+	mfve.MfveUnsharpMask = s 'MFVE Resize & Crop MFT'
+	{
+		CLSID = s '{70B44AAE-A6BE-4cd3-A4B4-A7567220B061}'
+		CurVer = s 'mfveutil.UnsharpMask.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {70B44AAE-A6BE-4cd3-A4B4-A7567220B061} = s 'MFVE Resize & Crop MFT'
+		{
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Both'
+			}
+			val AppID = s '%APPID%'
+			'TypeLib' = s '{8C4AA2DD-9633-4d44-BFF4-7A2CCD464269}'
+			'Version' = s '1.0'
+		}
+	}
+}

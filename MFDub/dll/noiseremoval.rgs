@@ -1,0 +1,25 @@
+HKCR
+{
+	mfve.MfvNoiseRemoval.1 = s 'MFVE Noise Removal MFT'
+	{
+		CLSID = s '{B1CFA1FE-9A17-4a47-94E9-FF8207321116}'
+	}
+	mfve.MfveNoiseRemoval = s 'MFVE Noise Removal MFT'
+	{
+		CLSID = s '{B1CFA1FE-9A17-4a47-94E9-FF8207321116}'
+		CurVer = s 'mfveutil.NoiseRemoval.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {B1CFA1FE-9A17-4a47-94E9-FF8207321116} = s 'MFVE Noise Removal MFT'
+		{
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Both'
+			}
+			val AppID = s '%APPID%'
+			'TypeLib' = s '{8C4AA2DD-9633-4d44-BFF4-7A2CCD464269}'
+			'Version' = s '1.0'
+		}
+	}
+}

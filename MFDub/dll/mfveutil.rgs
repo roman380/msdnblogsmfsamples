@@ -1,0 +1,22 @@
+HKCR
+{
+	NoRemove AppID
+	{
+		'%APPID%' = s 'mfve'
+		'MFVEUTIL.DLL'
+		{
+			val AppID = s '%APPID%'
+		}
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {D7A51D0D-15E7-4c26-B6FA-2FCA3BE26642} = s 'CompReg Class'
+		{
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{8C4AA2DD-9633-4d44-BFF4-7A2CCD464269}'
+		}
+	}
+}

@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{590793A3-CB58-4FF4-9404-8B14D93E11D5}") = "MFCopy", "MFCopy.vcproj", "{D1C50AD2-CF9B-4B89-8C33-2946BF65B0A5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D1C50AD2-CF9B-4B89-8C33-2946BF65B0A5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D1C50AD2-CF9B-4B89-8C33-2946BF65B0A5}.Debug|Win32.Build.0 = Debug|Win32
+		{D1C50AD2-CF9B-4B89-8C33-2946BF65B0A5}.Release|Win32.ActiveCfg = Release|Win32
+		{D1C50AD2-CF9B-4B89-8C33-2946BF65B0A5}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

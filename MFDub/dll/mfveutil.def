@@ -1,0 +1,13 @@
+
+LIBRARY      "mfveutil"
+
+EXPORTS
+	DllGetClassObject       PRIVATE
+	DllCanUnloadNow         PRIVATE
+	DllRegisterServer		PRIVATE
+	DllUnregisterServer		PRIVATE
+        MFVEMFTGetInfo
+	MFVEMFTEnum
+        MFVEMFTRegister
+        MFVEMFTUnregister
+	
