@@ -1,0 +1,248 @@
+<!--
+    THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
+    ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+    THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+    PARTICULAR PURPOSE.
+
+    Copyright (c) Microsoft Corporation. All rights reserved
+-->
+<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:MFManagedEncode.Gui"
+    x:Class="MFManagedEncode.Gui.MainWindow"
+    Name="windowRoot" 
+    Loaded="WindowRoot_Loaded" 
+    Title="Windows Media Foundation" 
+    Height="482" 
+    Width="552" 
+    MinHeight="425" 
+    MinWidth="480" 
+    WindowStartupLocation="CenterScreen" 
+    Icon="win.ico">
+    <FrameworkElement.Resources>
+        <Storyboard 
+            x:Key="mediaStoryboard" 
+            SlipBehavior="Slip" >
+            <MediaTimeline Storyboard.TargetName="mediaElement" FillBehavior="HoldEnd" CurrentTimeInvalidated="MediaTimeline_CurrentTimeInvalidated"/>
+        </Storyboard>
+        <Storyboard x:Key="showPlaybackControlsStoryboard">
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="mediaControlBack" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="mediaControlPause" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="mediaControlPlay" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="mediaControlBack" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="mediaControlBack" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="mediaControlPause" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="mediaControlPause" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="mediaControlPlay" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="mediaControlPlay" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="hidePlaybackControlsStoryboard">
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="mediaControlBack" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="mediaControlPause" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="mediaControlPlay" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="mediaControlPlay" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1.3"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="mediaControlPlay" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1.3"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="mediaControlPause" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1.3"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="mediaControlPause" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1.3"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="mediaControlBack" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1.3"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="mediaControlBack" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1.3"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </FrameworkElement.Resources>
+    <Grid x:Name="mainGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="110" />
+            <ColumnDefinition Width="0.7*"/>
+            <ColumnDefinition Width="110"/>
+            <ColumnDefinition Width="0.3*"/>
+            <ColumnDefinition Width="90"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition />
+            <RowDefinition Height="70" />
+            <RowDefinition Height="28" />
+            <RowDefinition Height="28" />
+            <RowDefinition Height="28" />
+            <RowDefinition x:Name="advancedRow1" Height="28"/>
+            <RowDefinition x:Name="advancedRow2" Height="28"/>
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+        <local:VideoTrimmer x:Name="videoTrimmer" IsEnabled="False" ClipToBounds="False" Width="Auto" Height="Auto" Margin="30,0" Padding="0" Grid.Row="2" Grid.ColumnSpan="5" />
+        <MediaElement x:Name="mediaElement" ScrubbingEnabled="True" LoadedBehavior="Manual" UnloadedBehavior="Stop" Width="Auto" Height="Auto" Margin="8,8,8,0" Grid.Row="1" Grid.ColumnSpan="5" 
+            MouseEnter="MediaElement_MouseEnter" 
+            MouseLeave="MediaElement_MouseLeave" 
+            MouseLeftButtonDown="MediaElement_MouseLeftButtonDown" 
+            MediaEnded="MediaElement_MediaEnded" 
+            MediaOpened="MediaElement_MediaOpened" 
+            MediaFailed="MediaElement_MediaFailed">
+            <MediaElement.Effect>
+                <DropShadowEffect Direction="270" BlurRadius="3" ShadowDepth="2" Opacity="0.6" />
+            </MediaElement.Effect>
+        </MediaElement>
+        <Rectangle x:Name="mediaElementBack" Fill="#EEE" Width="{Binding ActualHeight, ElementName=mediaElementBack, Mode=Default}" Margin="8,8,8,0" Grid.ColumnSpan="5" Grid.Row="1" 
+            MouseLeftButtonDown="MediaElement_MouseLeftButtonDown" >
+            <Rectangle.Effect>
+                <DropShadowEffect BlurRadius="3" Direction="270" Opacity="0.6" ShadowDepth="2"/>
+            </Rectangle.Effect>
+        </Rectangle>
+        <Rectangle Margin="0,8,0,0" Grid.ColumnSpan="5" Grid.Row="8">
+            <Rectangle.Fill>
+                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlColorKey}}"/>
+            </Rectangle.Fill>
+        </Rectangle>
+        <Rectangle Grid.ColumnSpan="5" >
+            <Rectangle.Fill>
+                <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0">
+                    <GradientStop Color="#FFDCE6FA" Offset="0.1"/>
+                    <GradientStop Color="#FF002D55" Offset="1"/>
+                    <GradientStop Color="#FF7396BE" Offset="0.7"/>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+        <Label x:Name="topLabel" Content="Conversion settings" FontSize="18" Margin="8" Grid.ColumnSpan="5" />
+        <Label HorizontalAlignment="Right" Margin="0,0,8,0" Content="Source:" Grid.Row="3" />
+        <Label HorizontalAlignment="Right" Margin="0,0,8,0" Content="Output folder:" Grid.Row="4"/>
+        <Label HorizontalAlignment="Right" Margin="0,0,8,0" Content="Format:" Grid.Row="5"/>
+        <Label HorizontalAlignment="Right" Margin="0,0,8,0" Content="Audio codec:" Grid.Row="6"/>
+        <Label HorizontalAlignment="Right" Margin="0,0,8,0" Content="Audio quality:" Grid.Row="7"/>
+        <Label HorizontalAlignment="Right" Margin="0,0,8,0" Content="Video size:" Grid.Row="5" Grid.Column="2"/>
+        <Label HorizontalAlignment="Right" Margin="0,0,8,0" Content="Video codec:" Grid.Row="6" Grid.Column="2"/>
+        <Label HorizontalAlignment="Right" Margin="0,0,8,0" Content="Video quality:" Grid.Row="7" Grid.Column="2"/>
+        <Button x:Name="continueButton" Content="Continue" ClipToBounds="False" HorizontalAlignment="Right" Width="80" Margin="0,16,95,8" Grid.Column="0" Grid.Row="8" Grid.ColumnSpan="5"
+            Click="ContinueButton_Click" />
+        <Button x:Name="exitButton" Content="Exit" ClipToBounds="False" HorizontalAlignment="Right" Width="80" Margin="0,16,8,8" Grid.Column="0" Grid.Row="8" Grid.ColumnSpan="5"
+            Click="ExitButton_Click" />
+        <Button x:Name="browseSource" Content="Browse..." Margin="3,2,8,2" Grid.Column="4" Grid.Row="3"
+            Click="BrowseSource_Click" />
+        <Button x:Name="browseOutput" Content="Browse..." Margin="3,2,8,2" Grid.Column="4" Grid.Row="4"
+            Click="BrowseOutput_Click" />
+        <TextBox x:Name="sourceText" IsReadOnly="True" TextWrapping="Wrap" Margin="3" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3" />
+        <TextBox x:Name="outputText" IsReadOnly="True" TextWrapping="Wrap" Margin="3" Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="3" />
+        <ComboBox x:Name="mediaFormat" SelectedIndex="0" Grid.Column="1" Grid.Row="5" Margin="3"  
+            SelectionChanged="MediaFormat_SelectionChanged">
+            <ComboBoxItem Content="Windows Media (Transcode API)"/>
+            <ComboBoxItem>MP4 (Transcode API)</ComboBoxItem>
+            <ComboBoxItem Content="Windows Media (Sink writer)" />
+            <ComboBoxItem Content="MP4 (Sink writer)" />
+        </ComboBox>
+        <ComboBox x:Name="audioCodec" SelectedIndex="0" Margin="3" Grid.Column="1" Grid.Row="6">
+            <ComboBoxItem Content="WMA 9 Professional"/>
+            <ComboBoxItem Content="WMA 9"/>
+        </ComboBox>
+        <ComboBox x:Name="audioQuality" SelectedIndex="1" Margin="3" Grid.Column="1" Grid.Row="7">
+            <ComboBoxItem Content="192 kbps (High)"/>
+            <ComboBoxItem Content="128 kbps (Normal)"/>
+            <ComboBoxItem Content="96 kbps (Low)"/>
+        </ComboBox>
+        <ComboBox x:Name="videoSize" SelectedIndex="0"  Margin="3,3,8,3" Grid.Column="3" Grid.Row="5" Grid.ColumnSpan="2">
+            <ComboBoxItem Content="640 x 480"/>
+        </ComboBox>
+        <ComboBox x:Name="videoCodec" SelectedIndex="0" Margin="3,3,8,3" Grid.Column="3" Grid.Row="6" Grid.ColumnSpan="2">
+            <ComboBoxItem Content="VC-1 (SMPTE 421M)"/>
+            <ComboBoxItem Content="WMV 9"/>
+            <ComboBoxItem Content="WMV 8"/>
+        </ComboBox>
+        <ComboBox x:Name="videoQuality" SelectedIndex="2" Margin="3,3,8,3" Grid.Column="3" Grid.Row="7" Grid.ColumnSpan="2">
+            <ComboBoxItem Content="8000 kbps (HD)"/>
+            <ComboBoxItem Content="5000 (High)"/>
+            <ComboBoxItem Content="1500 kbps (Normal)"/>
+            <ComboBoxItem Content="800 kbps (Low)"/>
+            <ComboBoxItem Content="384 kbps (Very low)"/>
+        </ComboBox>
+        <Rectangle x:Name="mediaControlBack" IsHitTestVisible="False" RadiusX="5.5" RadiusY="5.5" Opacity="0" RenderTransformOrigin="0.5,0.5" Width="50" Height="50" Margin="10,18,10,10" Grid.Row="1" Grid.ColumnSpan="5">
+            <Rectangle.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                </TransformGroup>
+            </Rectangle.RenderTransform>
+            <Rectangle.Stroke>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#CCFFFFFF" Offset="0"/>
+                    <GradientStop Color="#CC555555" Offset="1"/>
+                </LinearGradientBrush>
+            </Rectangle.Stroke>
+            <Rectangle.Fill>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#99FFFFFF"/>
+                    <GradientStop Color="#99969696" Offset="1"/>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+        <Grid x:Name="mediaControlPause" IsHitTestVisible="False" Opacity="0" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Width="28" Height="35" Margin="10,18,10,10" Grid.Row="1" Grid.ColumnSpan="5">
+            <Grid.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                </TransformGroup>
+            </Grid.RenderTransform>
+            <Rectangle Stroke="#4CFFFFFF" HorizontalAlignment="Left" Margin="0" Width="10" Height="35">
+                <Rectangle.Fill>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#66000000" Offset="1"/>
+                        <GradientStop Color="#CC000000"/>
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle Stroke="#4CFFFFFF" HorizontalAlignment="Right" Width="10" Height="35">
+                <Rectangle.Fill>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#66000000" Offset="1"/>
+                        <GradientStop Color="#CC000000"/>
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+        </Grid>
+        <Path x:Name="mediaControlPlay" Stretch="Fill" VerticalAlignment="Center" IsHitTestVisible="False" Stroke="#4CFFFFFF" Opacity="0" HorizontalAlignment="Center" Data="M0,0 L1,1 0,2 z" RenderTransformOrigin="0.5,0.5" Height="35" Width="23" Margin="13,18,10,10" Grid.Row="1" Grid.ColumnSpan="5">
+            <Path.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                </TransformGroup>
+            </Path.RenderTransform>
+            <Path.Fill>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#66000000" Offset="1"/>
+                    <GradientStop Color="#CC000000"/>
+                </LinearGradientBrush>
+            </Path.Fill>
+        </Path>
+        <Expander x:Name="advancedExpander" Header="Advanced options" HorizontalAlignment="Left" VerticalAlignment="Center" IsExpanded="True" Margin="8,16,0,8" Grid.Row="8" Grid.ColumnSpan="5" 
+            Expanded="AdvancedExpander_Expanded" 
+            Collapsed="AdvancedExpander_Collapsed"/>
+    </Grid>
+</Window>

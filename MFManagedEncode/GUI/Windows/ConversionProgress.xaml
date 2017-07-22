@@ -1,0 +1,113 @@
+<!--
+    THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
+    ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+    THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+    PARTICULAR PURPOSE.
+
+    Copyright (c) Microsoft Corporation. All rights reserved
+-->
+<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Class="MFManagedEncode.Gui.ConversionProgress"
+    x:Name="windowRoot"
+    Title="Conversion progress"
+    Width="408" Height="211" ResizeMode="NoResize" Icon="progress.ico" Closing="Window_Closing" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Storyboard x:Key="progressTimeline">
+            <DoubleAnimationUsingKeyFrames RepeatBehavior="Forever" BeginTime="00:00:00" Storyboard.TargetName="progressAnimation" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00.5000000" Value="90"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:01" Value="180"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:01.5000000" Value="270"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:02" Value="360"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </Window.Resources>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource progressTimeline}"/>
+        </EventTrigger>
+    </Window.Triggers>
+    <Grid x:Name="mainGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="26" />
+            <RowDefinition Height="22" />
+            <RowDefinition />
+            <RowDefinition Height="42"/>
+        </Grid.RowDefinitions>
+        <Rectangle Margin="0" Grid.ColumnSpan="5" Grid.Row="4">
+            <Rectangle.Fill>
+                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlColorKey}}"/>
+            </Rectangle.Fill>
+        </Rectangle>
+        <Rectangle Grid.ColumnSpan="5" >
+            <Rectangle.Fill>
+                <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0">
+                    <GradientStop Color="#FFDCE6FA" Offset="0.116"/>
+                    <GradientStop Color="#FF002D55" Offset="1"/>
+                    <GradientStop Color="#FF7396BE" Offset="0.7"/>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+        <Label Margin="8" Content="Converting media file..." FontSize="18.667" Grid.ColumnSpan="5" x:Name="topLabel" />
+        <Button Margin="0,8,8,8" Width="80" Content="Cancel" Grid.Column="0" ClipToBounds="False" x:Name="cancelButton" HorizontalAlignment="Right" Grid.Row="4" Click="CancelButton_Click" />
+        <ProgressBar x:Name="conversionProgress" Margin="16,8,16,0" Grid.Row="3" VerticalAlignment="Top" Height="18"/>
+        <Ellipse StrokeEndLineCap="Round" StrokeLineJoin="Round" StrokeMiterLimit="100" StrokeStartLineCap="Round" StrokeThickness="6" HorizontalAlignment="Right" Margin="0,0,12,0" VerticalAlignment="Center" Width="30" Height="30" Stroke="#FF114584">
+            <Ellipse.Effect>
+                <DropShadowEffect Direction="270" ShadowDepth="2" BlurRadius="3" Opacity="0.4"/>
+            </Ellipse.Effect>
+        </Ellipse>
+        <Grid x:Name="progressAnimation" HorizontalAlignment="Right" Margin="0,0,12,0" VerticalAlignment="Center" Width="30" RenderTransformOrigin="0.5,0.5">
+            <Grid.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Grid.RenderTransform>
+            <Ellipse StrokeEndLineCap="Round" StrokeLineJoin="Round" StrokeMiterLimit="100" StrokeStartLineCap="Round" StrokeThickness="6" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" Width="30" Height="30">
+                <Ellipse.Stroke>
+                    <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+                        <GradientStop Color="#FF060E1A" Offset="0"/>
+                        <GradientStop Color="#FF5ACCDC" Offset="0.836"/>
+                        <GradientStop Color="#FF10366C" Offset="0.427"/>
+                        <GradientStop Color="White" Offset="1"/>
+                    </LinearGradientBrush>
+                </Ellipse.Stroke>
+            </Ellipse>
+            <Ellipse StrokeEndLineCap="Round" StrokeLineJoin="Round" StrokeMiterLimit="100" StrokeStartLineCap="Round" StrokeThickness="4" HorizontalAlignment="Right" Margin="0,10.125,-1.458,0" VerticalAlignment="Top" Width="9.75" Height="9.75">
+                <Ellipse.Effect>
+                    <BlurEffect/>
+                </Ellipse.Effect>
+                <Ellipse.Fill>
+                    <RadialGradientBrush>
+                        <GradientStop Color="White"/>
+                        <GradientStop Color="#FFA7F4FF" Offset="1"/>
+                    </RadialGradientBrush>
+                </Ellipse.Fill>
+            </Ellipse>
+        </Grid>
+        <Ellipse StrokeEndLineCap="Round" StrokeLineJoin="Round" StrokeMiterLimit="100" StrokeStartLineCap="Round" StrokeThickness="6" HorizontalAlignment="Right" Margin="0,8,12,8" VerticalAlignment="Center" Width="30" Height="30">
+            <Ellipse.Stroke>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFC3FFFF" Offset="0"/>
+                    <GradientStop Color="#7795F2FF" Offset="0.2"/>
+                    <GradientStop Color="#00AFFFFE" Offset="0.504" />
+                    <GradientStop Color="#7F008CFF" Offset="1"/>
+                    <GradientStop Color="#003183FE" Offset="0.772"/>
+                </LinearGradientBrush>
+            </Ellipse.Stroke>
+        </Ellipse>
+        <TextBlock x:Name="pathLabel" Margin="16,5,16,0" Grid.Row="1">
+            <Bold>from</Bold> media.wmv <Bold>to</Bold> media.mp4
+        </TextBlock>
+        <TextBlock x:Name="timeLabel" Margin="16,0" Grid.Row="2" Text="About 10 minutes remaining"/>        
+    </Grid>
+</Window>
