@@ -1,8 +1,8 @@
-# Samples from Media Foundation Team Blog
+﻿# Samples from Media Foundation Team Blog
 
 The repository contains samples published on [Media Foundation Team Blog](https://blogs.msdn.microsoft.com/mf). The links to actual source code got broken at some point, hence this repository.
 
-## MFSimpleEncode (Wanted!)
+## MFSimpleEncode
 
 [MFSimpleEncode.exe](https://blogs.msdn.microsoft.com/mf/2009/12/02/mfsimpleencode/) - This is a command line tool that transcodes files from one media format to another. The source code is provided to use as a reference if you write your own transcode application. This tool uses the Media Foundation transcode API, which was introduced in Windows 7. 
 
