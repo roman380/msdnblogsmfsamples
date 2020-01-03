@@ -37,3 +37,11 @@ Media Foundation does not currently have support for reading DRM properties, so 
 
 * [Microsoft Media Foundation code samples online](http://alax.info/blog/microsoft-media-foundation-code-samples-online)
 * [Media Foundation Tools](http://alax.info/blog/software) (among other)
+
+### Related Resources
+
+* [Questions tagged `ms-media-foundation` -- StackOverflow](https://stackoverflow.com/questions/tagged/ms-media-foundation) - probably the best place nowadays to seek information on Media Foundation
+* [Media Foundation Development for Windows Desktop -- MSDN Forums](https://social.msdn.microsoft.com/Forums/windowsdesktop/en-US/home?forum=mediafoundationdevelopment) - almost dead but lazily monitored by MSFT people; if you encounter a severe problem, you might draw some attention there
+
+---
+<sub>Brought to you by [Fooling Around](http://alax.info/blog/tag/media-foundation)</sub>
