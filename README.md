@@ -42,7 +42,7 @@ Media Foundation does not currently have support for reading DRM properties, so 
 
 * [Questions tagged `ms-media-foundation` -- StackOverflow](https://stackoverflow.com/questions/tagged/ms-media-foundation) - probably the best place nowadays to seek information on Media Foundation
 * [Media Foundation Development for Windows Desktop -- MSDN Forums](https://social.msdn.microsoft.com/Forums/windowsdesktop/en-US/home?forum=mediafoundationdevelopment) - almost dead but lazily monitored by MSFT people; if you encounter a severe problem, you might draw some attention there
-* [A set of unofficial minimal sample apps that demonstrate how to use certain parts of Microsoft's Windows Media Foundation API.](https://github.com/sipsorcery/mediafoundationsamples) - by [Aaron @sipsorcery Clauson](https://github.com/sipsorcery)
+* [A set of unofficial minimal sample apps that demonstrate how to use certain parts of Microsoft's Windows Media Foundation API](https://github.com/sipsorcery/mediafoundationsamples) - by [Aaron @sipsorcery Clauson](https://github.com/sipsorcery)
 * [Tanta: Windows Media Foundation Sample Projects](http://www.ofitselfso.com/Tanta/) - a free book and C# sample code on Windows Media Foundation by Nic Syn
 
 ---
